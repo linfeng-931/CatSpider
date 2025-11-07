@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 981c66ddddf844e7a90fbe28378cb6af
+guid: 62247c15d8f914d829af81f1ab098172
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -116,12 +116,12 @@ TextureImporter:
       name: Hat_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 300
-        height: 300
+        x: 108
+        y: 172
+        width: 175
+        height: 116
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0e9ae1d4a0cbe4cd895c3fe0e2e25213
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 

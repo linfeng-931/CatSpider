@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
+using Mono.Cecil.Cil;
 
 public class RopeSystem : MonoBehaviour
 {
@@ -15,9 +16,10 @@ public class RopeSystem : MonoBehaviour
     [SerializeField] float maxDirection;
     [SerializeField] float minDirection;
     [SerializeField] float climbSpeed = 30f;
+    public bool readyShoot;
+    public float aimAngle;
 
     private bool ropeAttached;
-    private bool readyShoot;
     private Vector2 playerPosition;
     private Rigidbody2D ropeHingeAnchorRb;
     private SpriteRenderer ropeHingeAnchorSprite;
@@ -46,7 +48,7 @@ public class RopeSystem : MonoBehaviour
         Vector3 facingDirection = worldMousePosition - transform.position;
 
         //取得玩家與鼠標的角度並維持為正
-        var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
+        aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
         if (aimAngle < 0.0f)
         {
             aimAngle = Mathf.PI * 2 + aimAngle; //如果是負值加2拍
