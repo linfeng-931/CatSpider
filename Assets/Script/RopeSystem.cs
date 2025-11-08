@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using Mono.Cecil.Cil;
+using Unity.VisualScripting;
 
 public class RopeSystem : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class RopeSystem : MonoBehaviour
     [SerializeField] float climbSpeed = 30f;
     public bool readyShoot;
     public float aimAngle;
+    public PlayerStatus playerStatus;
+    public int startShoot = 0;
 
     private bool ropeAttached;
     private Vector2 playerPosition;
@@ -27,6 +30,8 @@ public class RopeSystem : MonoBehaviour
     private bool distanceSet;
     private bool isColliding;
     private bool shrinkComplete;
+    private float shootTimer = 3f;
+    private bool udFlag = false;
 
     void Awake()
     {
@@ -59,7 +64,7 @@ public class RopeSystem : MonoBehaviour
 
         playerPosition = transform.position;
 
-        if (Input.GetMouseButton(0) && !readyShoot)
+        if (Input.GetMouseButton(0) && !readyShoot && shootTimer > 0.5f && playerStatus.Energy >= 3f)
         {
             readyShoot = true;
         }
@@ -79,9 +84,16 @@ public class RopeSystem : MonoBehaviour
         }
         UpdateRopePositions();
         HandleRopeLength();
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(0) && playerMovement.isSwinging)
         {
+            shootTimer = 0f;
+            startShoot = 0;
             ResetRope();
+        }
+        if (!readyShoot && shootTimer < 2.0f)
+        {
+            shootTimer += Time.deltaTime;
+            //print(shootTimer);
         }
     }
 
@@ -124,6 +136,7 @@ public class RopeSystem : MonoBehaviour
         var hit = Physics2D.Raycast(playerPosition, aimDirection, dir, ropeLayerMask);
         if (hit.collider != null)
         {
+            if(startShoot == 0) startShoot = 1;
             playerMovement.isSwinging = true;
             ropeAttached = true;
             if (!ropePositions.Contains(hit.point))
@@ -143,7 +156,7 @@ public class RopeSystem : MonoBehaviour
         }
     }
 
-    private void ResetRope()
+    public void ResetRope()
     {
         ropeJoint.enabled = false;
         ropeAttached = false;
@@ -212,12 +225,19 @@ public class RopeSystem : MonoBehaviour
                 {
                     shrinkComplete = true;
                     ResetRope();
-                } 
+                }
             }
         }
-        
-        if (playerMovement.InputY > 0f && ropeAttached && !isColliding)
+
+        Vector2 pos = playerMovement.groundpoint.position;
+        if (playerMovement.InputY > 0f && ropeAttached && !playerMovement.colUp)
         {
+            
+            if (!udFlag)
+            {
+                playerMovement.groundpoint.position = new Vector2(playerPosition.x, playerPosition.y);
+                udFlag = true;
+            }
             if (playerMovement.standGround)
             {
                 GetComponent<DistanceJoint2D>().enabled = true;
@@ -227,11 +247,24 @@ public class RopeSystem : MonoBehaviour
             else
             {
                 ropeJoint.distance -= Time.deltaTime * climbSpeed;
-            }
+            } 
         }
         else if (playerMovement.InputY < 0f && ropeAttached)
         {
             ropeJoint.distance += Time.deltaTime * climbSpeed;
+            if (udFlag)
+            {
+                playerMovement.groundpoint.position = new Vector2(playerPosition.x, playerPosition.y-1.7f);
+                udFlag = false;
+            }   
+        }
+        else
+        {
+            if (udFlag)
+            {
+                playerMovement.groundpoint.position = new Vector2(playerPosition.x, playerPosition.y-1.7f);
+                udFlag = false;
+            }  
         }
     }
 

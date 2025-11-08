@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
 using UnityEditor.Animations;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Tilemaps;
@@ -14,6 +15,9 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public float dashForce;
     public Transform groundpoint;
+    public Transform leftCheck;
+    public Transform rightCheck;
+    public Transform upCheck;
     public LayerMask groundMask;
     public bool isSwinging = false;
     public bool releaseSwing = false;
@@ -26,16 +30,24 @@ public class PlayerController : MonoBehaviour
     public bool shrinkLine;
     public bool standGround;
     public GameObject groundPos;
+    public GameObject upPos;
     public GameObject Head;
+    public bool colUp;
+    public PlayerStatus playerStatus;
 
     private Rigidbody2D rig;
     private Animator ani;
     private Animator feetAni;
     private Animator hatAni;
-    private BoxCollider2D col;
-    private bool endSwing = true;
+    private CapsuleCollider2D col;
+    public bool endSwing = true;
     private bool twiceColGround = false;
     private bool isDash = false;
+    private Vector2 boxSize = new Vector2(0.1f, 2f);
+    private Vector2 groundBoxSize = new Vector2(2.3f, 0.1f);
+    private RopeSystem ropeSystem;
+    private float twiceColGroundTimer = 0f;
+    //private bool autoJump = false;
 
     //子物件
     private GameObject feet;
@@ -54,7 +66,7 @@ public class PlayerController : MonoBehaviour
         releaseSwing = false;
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
-        col = GetComponent<BoxCollider2D>();
+        col = GetComponent<CapsuleCollider2D>();
         feet = transform.GetChild(0).gameObject;
         feetAni = feet.GetComponent<Animator>();
         hat = transform.GetChild(3).gameObject;
@@ -62,54 +74,63 @@ public class PlayerController : MonoBehaviour
         feet_HungUp = transform.GetChild(4).gameObject;
         shrinkLine = false;
         dashObj = transform.GetChild(6).gameObject;
+        ropeSystem = GetComponent<RopeSystem>();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        //InputKey = Input.GetKey()
-        standGround = Physics2D.OverlapCircle(groundpoint.position, .2f, groundMask);
-        //canJump = standGround;
+        standGround = Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask);
+        colUp = Physics2D.OverlapBox(upCheck.position, groundBoxSize, .2f, groundMask);
+        transform.GetChild(1).rotation = Quaternion.identity;
+        //if (standGround) autoJump = false;
 
         if (isSwinging)
         {
             //Swinging動畫與碰撞設定
             if (!standGround)
             {
-                ani.SetBool("isSwing", true);
-                ani.SetBool("isJump", false);
-                ani.SetBool("isWalk", false);
-                ani.SetBool("isSquat", false);
+                DisAni();
+                BodyAniActive("isSwing");
                 feet.SetActive(false);
                 feet_HungUp.SetActive(true);
 
-                col.size = new Vector2(2f, 2.5f);
+                col.direction = CapsuleDirection2D.Vertical;
+                groundBoxSize = new Vector2(1.0f, 0.5f);
+
+                //玩家角色角度控制
+                Vector3 dir = transform.GetChild(2).position - transform.position;
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    feet_HungUp.transform.GetChild(i).transform.rotation = Quaternion.Euler(0f, 0f, (angle * (-1f) + 90f) * 0.2f);
+                }
+
+                //是否為二次觸碰地板
+                if(twiceColGroundTimer < 1.0f) twiceColGroundTimer += Time.deltaTime;
+                if (twiceColGroundTimer > 0.5f)
+                {
+                    twiceColGround = true;
+                }
+                endSwing = false;
             }
             else
             {
                 ani.SetBool("isSwing", false);
                 feet.SetActive(true);
                 feet_HungUp.SetActive(false);
-                transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
-                
-                col.size = new Vector2(2.5f, 2f);
-            }
+                float front = directionFlag ? 1 : -1;
+                transform.rotation = Quaternion.Euler(front, 0, 0);
 
-            Vector3 dir = transform.GetChild(2).position - transform.position;
-            float angle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-            transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
-            
-            for(int i = 0; i<4; i++)
-            {
-                feet_HungUp.transform.GetChild(i).transform.rotation = Quaternion.Euler(0f, 0f, (angle*(-1f)+90f)*0.2f);
+                col.direction = CapsuleDirection2D.Horizontal;
+                groundBoxSize = new Vector2(2.3f, 0.1f);
+                twiceColGroundTimer = 0f;
             }
-
-            twiceColGround = true;
-            endSwing = false;
 
             //玩家到鉤子的單位方向向量
             Vector2 playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
-    
+
             //計算垂直向量
             Vector2 perpendicularDirection = new Vector2(0f, 0f);
             if (InputX < 0)
@@ -148,7 +169,10 @@ public class PlayerController : MonoBehaviour
                 ani.SetBool("isJump", true);
                 feet.SetActive(true);
                 feet_HungUp.SetActive(false);
-                transform.rotation = Quaternion.LookRotation(new Vector3(0f, 0f, 0f));
+                ropeSystem.startShoot = 0;
+                float front = directionFlag ? 1 : -1;
+                transform.rotation = Quaternion.Euler(front, 0, 0);
+                twiceColGroundTimer = 0f;
             }
 
             rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
@@ -157,25 +181,39 @@ public class PlayerController : MonoBehaviour
         else if (!endSwing)
         {
             rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.08f), rig.linearVelocityY);
-            if (standGround)
+            canJump = true;
+            if (standGround || !canJump)
             {
                 endSwing = true;
             }
         }
 
-        if (endSwing)
+        if (standGround && twiceColGround)
         {
-            if (twiceColGround) ResetSwing();
-            else
-            {
-                GetComponent<DistanceJoint2D>().enabled = false;
-            }
+            ResetSwing();
+            ropeSystem.ResetRope();
+        }
+
+        if (endSwing) // && !autoJump
+        {
+            GetComponent<DistanceJoint2D>().enabled = false;
             HeadControl();
             Action();
         }
     }
 
-    //角色控制
+    //碰撞偵測
+    /*void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("edge")) //jump會壞掉
+        {
+                autoJump = true;
+                int dir = directionFlag ? 1 : -1;
+                rig.linearVelocity = new Vector2(dir* 2.0f, 3.0f);
+        }
+    }*/
+    
+    //玩家控制
     public void Move(InputAction.CallbackContext context)
     {
         InputX = context.ReadValue<Vector2>().x;
@@ -209,12 +247,12 @@ public class PlayerController : MonoBehaviour
     }
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.started && !isDash)
+        if (context.started && !isDash && !isSwinging)
         {
             isDash = true;
-            int dir = directionFlag ? 1 : -1;
+            int front = directionFlag ? 1 : -1;
             rig.gravityScale = 0f;
-            rig.linearVelocity = new Vector2(dir * dashForce, 0);
+            rig.linearVelocity = new Vector2(front * dashForce, 0);
             dashOriginalPoint = transform.position;
             dashObj.SetActive(true);
             DisAni();
@@ -227,16 +265,19 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(groundpoint.position, 0.2f);
+        Gizmos.DrawWireCube(groundpoint.position, groundBoxSize);
+        Gizmos.DrawWireCube(upCheck.position, new Vector2(1.5f, 0.2f));
+        Gizmos.DrawWireCube(leftCheck.position, boxSize);
+        Gizmos.DrawWireCube(rightCheck.position, boxSize);
     }
 
-    //角色基礎動作
+    //動作函式
     private void Action()
     {
         ani.SetBool("isSwing", false);
         feet.SetActive(true);
         feet_HungUp.SetActive(false);
-        
+
         SquatAction();
         JumpAction();
         DashAction();
@@ -246,7 +287,9 @@ public class PlayerController : MonoBehaviour
     {
         if (isDash) return;
         //左右移動控制
-        rig.linearVelocity = new Vector2(moveSpeed * InputX, rig.linearVelocityY);
+        if (IsTouchingWallLeft() && !standGround) rig.linearVelocity = new Vector2(0.0001f, rig.linearVelocityY);
+        else if (IsTouchingWallRight() && !standGround) rig.linearVelocity = new Vector2(-0.0001f, rig.linearVelocityY);
+        else rig.linearVelocity = new Vector2(moveSpeed * InputX, rig.linearVelocityY);
         if (InputX > 0)
         {
             if (!directionFlag)
@@ -281,7 +324,7 @@ public class PlayerController : MonoBehaviour
                 feet.SetActive(true);
             }
         }
-        else if(standGround)
+        else if (standGround)
         {
             ani.SetBool("isWalk", false);
             hatAni.SetBool("isWalk", false);
@@ -294,7 +337,7 @@ public class PlayerController : MonoBehaviour
         if (!standGround)
         {
             jumpDelayTime += Time.deltaTime;
-            if(!isDash) BodyAniActive("isJump");
+            if (!isDash) BodyAniActive("isJump");
             feet.SetActive(true);
             feetAni.SetBool("isJump", true);
             feetAni.SetBool("isWalk", false);
@@ -350,7 +393,6 @@ public class PlayerController : MonoBehaviour
             col.offset = new Vector2(0, -0.166f);
         }
     }
-    
 
     //重置Swing
     void ResetSwing()
@@ -360,13 +402,17 @@ public class PlayerController : MonoBehaviour
         endSwing = true;
         twiceColGround = false;
         shrinkLine = false;
+        col.direction = CapsuleDirection2D.Horizontal;
+        groundBoxSize = new Vector2(2.3f, 0.1f);
+        canJump = true;
+        twiceColGroundTimer = 0f;
+        ropeSystem.startShoot = 0;
     }
 
     //Shoot角色頭部動作
     void HeadControl()
     {
         //取得玩家是否正在射擊狀態
-        var ropeSystem = GetComponent<RopeSystem>();
         bool readyShoot = ropeSystem.readyShoot;
         var headSpriteRenderer = Head.GetComponent<SpriteRenderer>();
 
@@ -413,7 +459,7 @@ public class PlayerController : MonoBehaviour
         hatAni.SetBool("isShoot", false);
         hatAni.SetBool("isDash", false);
     }
-    
+
     private void BodyAniActive(String act)
     {
         switch (act)
@@ -444,6 +490,22 @@ public class PlayerController : MonoBehaviour
                 break;
             default:
                 break;
-        }  
+        }
+    }
+
+    //環境互動
+    private void CatchEdge()
+    {
+
+    }
+    
+    bool IsTouchingWallLeft()
+    {
+        return Physics2D.OverlapBox(leftCheck.position, boxSize, 0f, groundMask);
+    }
+
+    bool IsTouchingWallRight()
+    {
+        return Physics2D.OverlapBox(rightCheck.position, boxSize, 0f, groundMask);
     }
 }
