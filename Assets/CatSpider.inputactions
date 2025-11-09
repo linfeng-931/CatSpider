@@ -28,7 +28,7 @@
                     "name": "Fire",
                     "type": "Button",
                     "id": "86918608-966c-49c8-961b-fca38fcb673c",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -64,6 +64,15 @@
                     "name": "Interactive",
                     "type": "Button",
                     "id": "3a171298-b9ea-4581-ad2e-df4aa8fd60ca",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchMap",
+                    "type": "Button",
+                    "id": "9d1e1bbc-9d02-4482-8b0e-fb457650b417",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -334,6 +343,17 @@
                     "action": "Interactive",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d60add5e-2607-420f-b616-bc8e99b81fc3",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchMap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -354,7 +374,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "2215a28f-f64f-4d40-84a3-aa2c0a86cd4a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -363,7 +383,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "06673f18-28ab-4b71-9c86-99f9e0fb4dd7",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -848,6 +868,54 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Scanner",
+            "id": "d856a326-ac91-46f0-8cce-6e48df53aaa1",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "dac99d88-9ddf-43c5-8945-b625f6ab0597",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchMap",
+                    "type": "Button",
+                    "id": "d0ab3ad8-c7a8-468e-82da-4e7b4f99013c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "601d83f8-6aec-4be3-ba71-ec6a48b47b13",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aa236739-56cb-4591-8559-80420fc84f50",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchMap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
         colUp = Physics2D.OverlapBox(upCheck.position, groundBoxSize, .2f, groundMask);
         transform.GetChild(1).rotation = Quaternion.identity;
         //if (standGround) autoJump = false;
+        print(canJump);
 
         if (isSwinging)
         {
@@ -220,13 +221,7 @@ public class PlayerController : MonoBehaviour
     //碰撞偵測
     void OnTriggerEnter2D(Collider2D other)
     {
-        /*if (other.CompareTag("edge")) //jump會壞掉
-        {
-                autoJump = true;
-                int dir = directionFlag ? 1 : -1;
-                rig.linearVelocity = new Vector2(dir* 2.0f, 3.0f);
-        }*/
-        if (other.CompareTag("Enemy")) //jump會壞掉
+        if (other.CompareTag("Enemy"))
         {
             isHart = true;
             playerStatus.Blood -= 1;
@@ -248,7 +243,7 @@ public class PlayerController : MonoBehaviour
         {
             rig.linearVelocity = new Vector2(rig.linearVelocity.x, jumpForce);
             canJump = false;
-            feetAni.SetBool("isJump", false);
+            feetAni.SetBool("isJump", true);
         }
         if (context.canceled)
         {
@@ -382,7 +377,7 @@ public class PlayerController : MonoBehaviour
             ani.SetBool("isJump", false);
             hatAni.SetBool("isJump", false);
             feetAni.SetBool("isJump", false);
-            if (jumpDelayTime > 0.5f)
+            if (jumpDelayTime > 0.5f || standGround)
             {
                 jumpDelayTime = 0f;
                 canJump = true;
@@ -539,12 +534,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //環境互動
-    private void CatchEdge()
-    {
-
-    }
-    
     bool IsTouchingWallLeft()
     {
         return Physics2D.OverlapBox(leftCheck.position, boxSize, 0f, groundMask);
