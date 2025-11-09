@@ -8,6 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
     public GameObject Head;
     public bool colUp;
     public PlayerStatus playerStatus;
+    public bool isHart;
+    public bool isInteract;
 
     private Rigidbody2D rig;
     private Animator ani;
@@ -63,6 +66,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        //DontDestroyOnLoad(gameObject); 場景轉換不消失
         releaseSwing = false;
         rig = GetComponent<Rigidbody2D>();
         ani = GetComponent<Animator>();
@@ -75,6 +79,17 @@ public class PlayerController : MonoBehaviour
         shrinkLine = false;
         dashObj = transform.GetChild(6).gameObject;
         ropeSystem = GetComponent<RopeSystem>();
+        isInteract = false;
+
+        //資料讀取
+        string lastScene = PlayerPrefs.GetString("LastScene");
+        if (SceneManager.GetActiveScene().name == lastScene)
+        {
+            float x = PlayerPrefs.GetFloat("PlayerPosX");
+            float y = PlayerPrefs.GetFloat("PlayerPosY");
+            transform.position = new Vector2(x, y);
+            playerStatus.Blood = PlayerPrefs.GetInt("Blood");
+        }
     }
 
     void FixedUpdate()
@@ -203,15 +218,20 @@ public class PlayerController : MonoBehaviour
     }
 
     //碰撞偵測
-    /*void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("edge")) //jump會壞掉
+        /*if (other.CompareTag("edge")) //jump會壞掉
         {
                 autoJump = true;
                 int dir = directionFlag ? 1 : -1;
                 rig.linearVelocity = new Vector2(dir* 2.0f, 3.0f);
+        }*/
+        if (other.CompareTag("Enemy")) //jump會壞掉
+        {
+            isHart = true;
+            playerStatus.Blood -= 1;
         }
-    }*/
+    }
     
     //玩家控制
     public void Move(InputAction.CallbackContext context)
@@ -263,6 +283,15 @@ public class PlayerController : MonoBehaviour
             col.offset = new Vector2(0, -0.6f);
         }
     }
+
+    public void Interactive(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            isInteract = true;
+        }
+    }
+    
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(groundpoint.position, groundBoxSize);
@@ -287,8 +316,14 @@ public class PlayerController : MonoBehaviour
     {
         if (isDash) return;
         //左右移動控制
-        if (IsTouchingWallLeft() && !standGround) rig.linearVelocity = new Vector2(0.0001f, rig.linearVelocityY);
-        else if (IsTouchingWallRight() && !standGround) rig.linearVelocity = new Vector2(-0.0001f, rig.linearVelocityY);
+        if (IsTouchingWallLeft() && !standGround)
+        {
+            rig.linearVelocity = new Vector2(0.0001f, rig.linearVelocityY);
+        }
+        else if (IsTouchingWallRight() && !standGround)
+        {
+            rig.linearVelocity = new Vector2(-0.0001f, rig.linearVelocityY);
+        }
         else rig.linearVelocity = new Vector2(moveSpeed * InputX, rig.linearVelocityY);
         if (InputX > 0)
         {
@@ -378,6 +413,17 @@ public class PlayerController : MonoBehaviour
     private void DashAction()
     {
         if (!isDash) return;
+
+        /*if (IsTouchingWallLeft()) dash撞牆問題待修
+        {
+            rig.linearVelocity = new Vector2(0.0001f, rig.linearVelocityY);
+            isDash = false;
+        }
+        else if (IsTouchingWallRight())
+        {
+            rig.linearVelocity = new Vector2(-0.0001f, rig.linearVelocityY);
+            isDash = false;
+        }*/
 
         dashDistance = Vector2.Distance(transform.position, dashOriginalPoint);
         if (dashDistance > 10.0f)

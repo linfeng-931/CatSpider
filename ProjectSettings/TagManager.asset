@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - edge
+  - Enemy
+  - Interactive
+  - SceneChange
   layers:
   - Default
   - TransparentFX

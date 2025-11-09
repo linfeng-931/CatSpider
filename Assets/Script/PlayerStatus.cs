@@ -1,3 +1,4 @@
+using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
@@ -18,6 +19,8 @@ public class PlayerStatus : MonoBehaviour
     private float maxMoveRange = 3.0f;
     private float moveRange;
     private float reWaveTimer;
+    private int maxBlood = 5;
+    private int disBlood = 5;
 
     void Start()
     {
@@ -28,8 +31,9 @@ public class PlayerStatus : MonoBehaviour
     void Update()
     {
         WaveControl();
+        BloodControl();
     }
-    
+
     void WaveControl()
     {
         if (ropeSystem.startShoot == 0)
@@ -70,6 +74,18 @@ public class PlayerStatus : MonoBehaviour
             Color c = src.color;
             c.a = 1f;
             src.color = c;
+        }
+    }
+
+    void BloodControl()
+    {
+        if ((disBlood - Blood) > 0 && disBlood != 0)
+        {
+            BloodObj.transform.GetChild(--disBlood).gameObject.GetComponent<UnityEngine.UI.Image>().color = blood_color[1];
+        }
+        else if ((disBlood - Blood) < 0)
+        {
+            BloodObj.transform.GetChild(disBlood++).gameObject.GetComponent<UnityEngine.UI.Image>().color = blood_color[0];
         }
     }
 }
