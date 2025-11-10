@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 groundBoxSize = new Vector2(2.3f, 0.1f);
     private RopeSystem ropeSystem;
     private float twiceColGroundTimer = 0f;
+    private float hartTimer;
+    private bool hartMove = false;
     //private bool autoJump = false;
 
     //子物件
@@ -97,124 +99,136 @@ public class PlayerController : MonoBehaviour
         standGround = Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask);
         colUp = Physics2D.OverlapBox(upCheck.position, groundBoxSize, .2f, groundMask);
         transform.GetChild(1).rotation = Quaternion.identity;
-        //if (standGround) autoJump = false;
-        print(canJump);
 
-        if (isSwinging)
+        //hart狀態，其他狀態皆抵銷
+        if (isHart)
         {
-            //Swinging動畫與碰撞設定
-            if (!standGround)
+            hartTimer += Time.deltaTime;
+            if (hartTimer > 1.0f)
             {
-                DisAni();
-                BodyAniActive("isSwing");
-                feet.SetActive(false);
-                feet_HungUp.SetActive(true);
-
-                col.direction = CapsuleDirection2D.Vertical;
-                groundBoxSize = new Vector2(1.0f, 0.5f);
-
-                //玩家角色角度控制
-                Vector3 dir = transform.GetChild(2).position - transform.position;
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
-
-                for (int i = 0; i < 4; i++)
+                isHart = false;
+            }
+            if(!hartMove)
+            rig.linearVelocity = new Vector2(0f, 0f);
+        }
+        else
+        {
+            if (isSwinging)
+            {
+                //Swinging動畫與碰撞設定
+                if (!standGround)
                 {
-                    feet_HungUp.transform.GetChild(i).transform.rotation = Quaternion.Euler(0f, 0f, (angle * (-1f) + 90f) * 0.2f);
+                    DisAni();
+                    BodyAniActive("isSwing");
+                    feet.SetActive(false);
+                    feet_HungUp.SetActive(true);
+
+                    col.direction = CapsuleDirection2D.Vertical;
+                    groundBoxSize = new Vector2(1.0f, 0.5f);
+
+                    //玩家角色角度控制
+                    Vector3 dir = transform.GetChild(2).position - transform.position;
+                    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                    transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        feet_HungUp.transform.GetChild(i).transform.rotation = Quaternion.Euler(0f, 0f, (angle * (-1f) + 90f) * 0.2f);
+                    }
+
+                    //是否為二次觸碰地板
+                    if (twiceColGroundTimer < 1.0f) twiceColGroundTimer += Time.deltaTime;
+                    if (twiceColGroundTimer > 0.1f)
+                    {
+                        twiceColGround = true;
+                    }
+                    endSwing = false;
+                }
+                else
+                {
+                    ani.SetBool("isSwing", false);
+                    feet.SetActive(true);
+                    feet_HungUp.SetActive(false);
+                    float front = directionFlag ? 1 : -1;
+                    transform.rotation = Quaternion.Euler(front, 0, 0);
+
+                    col.direction = CapsuleDirection2D.Horizontal;
+                    groundBoxSize = new Vector2(2.3f, 0.1f);
+                    twiceColGroundTimer = 0f;
                 }
 
-                //是否為二次觸碰地板
-                if(twiceColGroundTimer < 1.0f) twiceColGroundTimer += Time.deltaTime;
-                if (twiceColGroundTimer > 0.5f)
+                //玩家到鉤子的單位方向向量
+                Vector2 playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
+
+                //計算垂直向量
+                Vector2 perpendicularDirection = new Vector2(0f, 0f);
+                if (InputX < 0)
                 {
-                    twiceColGround = true;
+                    GetComponent<SpriteRenderer>().flipX = true;
+                    feet_HungUp.transform.localScale = new Vector3(-1f, 1f, 1f);
+
+                    perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+                    Vector2 leftPerpPos = (Vector2)transform.position + perpendicularDirection * -2f;
+                    if (perpendicularDirection.x > 0) perpendicularDirection.x *= -1;
+                    Debug.DrawLine(transform.position, leftPerpPos, UnityEngine.Color.white, 0f);
                 }
-                endSwing = false;
+                else if (InputX > 0) //&& !shrinkLine 待修
+                {
+                    GetComponent<SpriteRenderer>().flipX = false;
+                    feet_HungUp.transform.localScale = new Vector3(1f, 1f, 1f);
+
+                    perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
+                    Vector2 rightPerpPos = (Vector2)transform.position + perpendicularDirection * -2f;
+                    if (perpendicularDirection.x < 0) perpendicularDirection.x *= -1;
+                    Debug.DrawLine(transform.position, rightPerpPos, UnityEngine.Color.white, 0f);
+                }
+
+                if (InputX != 0)
+                {
+                    Vector2 force = perpendicularDirection * swingForce;
+                    rig.AddForce(force, ForceMode2D.Force);
+                }
+                lastSwingDirection = perpendicularDirection;
             }
-            else
+            else if (releaseSwing)
             {
-                ani.SetBool("isSwing", false);
-                feet.SetActive(true);
-                feet_HungUp.SetActive(false);
-                float front = directionFlag ? 1 : -1;
-                transform.rotation = Quaternion.Euler(front, 0, 0);
+                if (!standGround)
+                {
+                    ani.SetBool("isSwing", false);
+                    ani.SetBool("isJump", true);
+                    feet.SetActive(true);
+                    feet_HungUp.SetActive(false);
+                    ropeSystem.startShoot = 0;
+                    float front = directionFlag ? 1 : -1;
+                    transform.rotation = Quaternion.Euler(front, 0, 0);
+                    twiceColGroundTimer = 0f;
+                }
 
-                col.direction = CapsuleDirection2D.Horizontal;
-                groundBoxSize = new Vector2(2.3f, 0.1f);
-                twiceColGroundTimer = 0f;
+                rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
+                releaseSwing = false;
             }
-
-            //玩家到鉤子的單位方向向量
-            Vector2 playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
-
-            //計算垂直向量
-            Vector2 perpendicularDirection = new Vector2(0f, 0f);
-            if (InputX < 0)
+            else if (!endSwing)
             {
-                GetComponent<SpriteRenderer>().flipX = true;
-                feet_HungUp.transform.localScale = new Vector3(-1f, 1f, 1f);
-
-                perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
-                Vector2 leftPerpPos = (Vector2)transform.position + perpendicularDirection * -2f;
-                if (perpendicularDirection.x > 0) perpendicularDirection.x *= -1;
-                Debug.DrawLine(transform.position, leftPerpPos, UnityEngine.Color.white, 0f);
+                rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.08f), rig.linearVelocityY);
+                canJump = true;
+                if (standGround || !canJump)
+                {
+                    endSwing = true;
+                }
             }
-            else if (InputX > 0) //&& !shrinkLine 待修
+
+            if (standGround && twiceColGround)
             {
-                GetComponent<SpriteRenderer>().flipX = false;
-                feet_HungUp.transform.localScale = new Vector3(1f, 1f, 1f);
-
-                perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
-                Vector2 rightPerpPos = (Vector2)transform.position + perpendicularDirection * -2f;
-                if (perpendicularDirection.x < 0) perpendicularDirection.x *= -1;
-                Debug.DrawLine(transform.position, rightPerpPos, UnityEngine.Color.white, 0f);
+                ResetSwing();
+                ropeSystem.ResetRope();
             }
 
-            if (InputX != 0)
+            if (endSwing) // && !autoJump
             {
-                Vector2 force = perpendicularDirection * swingForce;
-                rig.AddForce(force, ForceMode2D.Force);
+                GetComponent<DistanceJoint2D>().enabled = false;
+                HeadControl();
+                Action();
             }
-            lastSwingDirection = perpendicularDirection;
-        }
-        else if (releaseSwing)
-        {
-            if (!standGround)
-            {
-                ani.SetBool("isSwing", false);
-                ani.SetBool("isJump", true);
-                feet.SetActive(true);
-                feet_HungUp.SetActive(false);
-                ropeSystem.startShoot = 0;
-                float front = directionFlag ? 1 : -1;
-                transform.rotation = Quaternion.Euler(front, 0, 0);
-                twiceColGroundTimer = 0f;
-            }
-
-            rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
-            releaseSwing = false;
-        }
-        else if (!endSwing)
-        {
-            rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.08f), rig.linearVelocityY);
-            canJump = true;
-            if (standGround || !canJump)
-            {
-                endSwing = true;
-            }
-        }
-
-        if (standGround && twiceColGround)
-        {
-            ResetSwing();
-            ropeSystem.ResetRope();
-        }
-
-        if (endSwing) // && !autoJump
-        {
-            GetComponent<DistanceJoint2D>().enabled = false;
-            HeadControl();
-            Action();
         }
     }
 
@@ -225,6 +239,11 @@ public class PlayerController : MonoBehaviour
         {
             isHart = true;
             playerStatus.Blood -= 1;
+        }
+        if (other.CompareTag("Leakage"))
+        {
+            isHart = true;
+            playerStatus.Blood = 0;
         }
     }
     
@@ -266,6 +285,14 @@ public class PlayerController : MonoBehaviour
         {
             isDash = true;
             int front = directionFlag ? 1 : -1;
+            if (InputX > 0)
+            {
+                front = 1;
+            }
+            else if(InputX < 0)
+            {
+                front = -1;
+            }
             rig.gravityScale = 0f;
             rig.linearVelocity = new Vector2(front * dashForce, 0);
             dashOriginalPoint = transform.position;
@@ -377,7 +404,7 @@ public class PlayerController : MonoBehaviour
             ani.SetBool("isJump", false);
             hatAni.SetBool("isJump", false);
             feetAni.SetBool("isJump", false);
-            if (jumpDelayTime > 0.5f || standGround)
+            if (jumpDelayTime > 0.1f || standGround)
             {
                 jumpDelayTime = 0f;
                 canJump = true;
@@ -432,6 +459,7 @@ public class PlayerController : MonoBehaviour
             feet.SetActive(false);
             col.size = new Vector2(2.5f, 2.0f);
             col.offset = new Vector2(0, -0.166f);
+            rig.linearVelocity = new Vector2(0, 0);
         }
     }
 
@@ -456,10 +484,13 @@ public class PlayerController : MonoBehaviour
         //取得玩家是否正在射擊狀態
         bool readyShoot = ropeSystem.readyShoot;
         var headSpriteRenderer = Head.GetComponent<SpriteRenderer>();
+        var hatSpriteRenderer = Head.transform.GetChild(0).GetComponent<SpriteRenderer>();
 
         //1
         if (!readyShoot || isSwinging)
         {
+            Head.SetActive(false);
+            hat.SetActive(true);
             headSpriteRenderer.enabled = false;
             Head.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
             return;
@@ -471,13 +502,19 @@ public class PlayerController : MonoBehaviour
 
         if (aimAngle < range || aimAngle > 360f - range)
         {
+            Head.SetActive(true);
             headSpriteRenderer.flipX = false;
+            hatSpriteRenderer.flipX = false;
             Head.transform.rotation = Quaternion.Euler(0f, 0f, aimAngle);
+            hat.SetActive(false);
         }
         else if (aimAngle > 180f - range && aimAngle < 180f + range)
         {
+            Head.SetActive(true);
             headSpriteRenderer.flipX = true;
+            hatSpriteRenderer.flipX = true;
             Head.transform.rotation = Quaternion.Euler(0f, 0f, aimAngle - 180.0f);
+            hat.SetActive(false);
         }
         headSpriteRenderer.enabled = true;
 

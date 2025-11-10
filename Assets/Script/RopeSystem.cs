@@ -134,7 +134,7 @@ public class RopeSystem : MonoBehaviour
         ropeRenderer.enabled = true;
         float dir = Mathf.Sqrt(Mathf.Pow(aimPosition.x - transform.position.x, 2) + Mathf.Pow(aimPosition.y - transform.position.y, 2));
         var hit = Physics2D.Raycast(playerPosition, aimDirection, dir, ropeLayerMask);
-        if (hit.collider != null)
+        if (hit.collider != null && !hit.collider.CompareTag("disAttached") && !hit.collider.CompareTag("Leakage"))
         {
             if(startShoot == 0) startShoot = 1;
             playerMovement.isSwinging = true;

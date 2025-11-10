@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Interactive
   - SceneChange
+  - disAttached
+  - Leakage
   layers:
   - Default
   - TransparentFX

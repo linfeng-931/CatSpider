@@ -10,8 +10,8 @@ public class Line : MonoBehaviour
     void Start()
     {
         line = this.gameObject.AddComponent<LineRenderer>();
-        line.startWidth = 0.05F;
-        line.endWidth = 0.05F;
+        line.startWidth = 10.0F;
+        line.endWidth = 10.0F;
 
         line.positionCount = 2;
 
