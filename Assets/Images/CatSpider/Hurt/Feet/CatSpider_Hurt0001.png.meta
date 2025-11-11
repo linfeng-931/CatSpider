@@ -125,103 +125,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CatSpider_Hurt0001_0
-      rect:
-        serializedVersion: 2
-        x: 28
-        y: 24
-        width: 40
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: aa12ba211cf7f2370800000000000000
-      internalID: 8299993105485734314
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CatSpider_Hurt0001_1
-      rect:
-        serializedVersion: 2
-        x: 76
-        y: 24
-        width: 40
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 57aa1a190e6903110800000000000000
-      internalID: 1238655788787018357
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CatSpider_Hurt0001_2
-      rect:
-        serializedVersion: 2
-        x: 124
-        y: 24
-        width: 40
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 631e9c80cebc16210800000000000000
-      internalID: 1324563980043804982
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CatSpider_Hurt0001_3
-      rect:
-        serializedVersion: 2
-        x: 172
-        y: 24
-        width: 40
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 7a7220a23831df9b0800000000000000
-      internalID: -5044854553518659673
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: CatSpider_Hurt0001_4
       rect:
         serializedVersion: 2
-        x: 212
-        y: 24
-        width: 40
-        height: 56
+        x: 0
+        y: 0
+        width: 300
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -238,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8edd0170c50ec4414afe21d0363c1f2d
     internalID: 0
     vertices: []
     indices: 

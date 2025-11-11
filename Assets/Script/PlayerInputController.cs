@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 //https://www.youtube.com/watch?v=NZBAr_V7r0M
@@ -5,7 +6,11 @@ using UnityEngine.InputSystem;
 public class PlayerInputController : MonoBehaviour
 {
     public PlayerController playerController;
+    public GameObject Scanner;
+    public GameObject Menu;
+
     private PlayerInput playerInput;
+    private string rePlayerInput;
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -24,9 +29,41 @@ public class PlayerInputController : MonoBehaviour
     {
         playerInput.actions.FindActionMap("Scanner").Enable();
     }
-    // Update is called once per frame
-    void Update()
-    {
 
+    public void SwitchToScanner(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Scanner.SetActive(true);
+            playerInput.SwitchCurrentActionMap("Scanner");
+        }
+    }
+    public void SwitchToPlayer(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Scanner.SetActive(false);
+            playerInput.SwitchCurrentActionMap("Player");
+        }
+    }
+
+    public void OpenMenu(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Menu.SetActive(true);
+            Time.timeScale = 0;
+            rePlayerInput = playerInput.currentActionMap.name;
+            playerInput.SwitchCurrentActionMap("UI");
+        }
+    }
+    public void CloseMenu(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Menu.SetActive(false);
+            Time.timeScale = 1;
+            playerInput.SwitchCurrentActionMap(rePlayerInput);
+        }
     }
 }

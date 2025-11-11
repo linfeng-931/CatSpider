@@ -35,8 +35,9 @@ public class PlayerController : MonoBehaviour
     public GameObject Head;
     public bool colUp;
     public PlayerStatus playerStatus;
-    public bool isHart;
+    public bool isHurt;
     public bool isInteract;
+    public float hurtMoveDistance = 5.0f;
 
     private Rigidbody2D rig;
     private Animator ani;
@@ -46,12 +47,15 @@ public class PlayerController : MonoBehaviour
     public bool endSwing = true;
     private bool twiceColGround = false;
     private bool isDash = false;
-    private Vector2 boxSize = new Vector2(0.1f, 2f);
+    private Vector2 boxSize = new Vector2(0.1f, 1.5f);
     private Vector2 groundBoxSize = new Vector2(2.3f, 0.1f);
     private RopeSystem ropeSystem;
     private float twiceColGroundTimer = 0f;
-    private float hartTimer;
-    private bool hartMove = false;
+    private float hurtTimer;
+    private bool hurtMove = false;
+    private bool readyHurt = false;
+    private int enemyPos = 1;
+    private Vector2 hurtStartPos;
     //private bool autoJump = false;
 
     //子物件
@@ -100,21 +104,59 @@ public class PlayerController : MonoBehaviour
         colUp = Physics2D.OverlapBox(upCheck.position, groundBoxSize, .2f, groundMask);
         transform.GetChild(1).rotation = Quaternion.identity;
 
-        //hart狀態，其他狀態皆抵銷
-        if (isHart)
+        //hurt狀態，其他狀態皆抵銷
+        if (isHurt)
         {
-            hartTimer += Time.deltaTime;
-            if (hartTimer > 1.0f)
+            if (!readyHurt)
             {
-                isHart = false;
+                Head.SetActive(false);
+                hat.SetActive(true);
+                print("hi");
+                DisAni();
+                feet.SetActive(true);
+                feet_HungUp.SetActive(false);
+                readyHurt = true;
+                ani.Update(0);
+                hatAni.Update(0);
+                hurtStartPos = transform.position;
+                isDash = false;
+                rig.gravityScale = 5f;
+                dashObj.SetActive(false);
+                col.size = new Vector2(2.5f, 2.0f);
+                col.offset = new Vector2(0, -0.166f);
+
+                BodyAniActive("isHurt");
+                feetAni.SetBool("isHurt", true);
             }
-            if(!hartMove)
-            rig.linearVelocity = new Vector2(0f, 0f);
+            hurtTimer += Time.deltaTime;
+
+            if (hurtTimer > 1.0f)
+            {
+                isHurt = false;
+                readyHurt = false;
+                ani.SetBool("isHurt", false);
+                hatAni.SetBool("isHurt", false);
+                feetAni.SetBool("isHurt", false);
+                feet.SetActive(false);
+                hurtTimer = 0f;
+            }
+            if (!hurtMove)
+            {
+                if (Vector2.Distance(hurtStartPos, transform.position) < hurtMoveDistance && playerStatus.Blood>1)
+                {
+                    rig.linearVelocity = new Vector2(20f * enemyPos, 0f);
+                }
+                else
+                {
+                    rig.linearVelocity = new Vector2(0f, 0f);
+                }
+            }
         }
         else
         {
             if (isSwinging)
             {
+                Head.SetActive(false);
                 //Swinging動畫與碰撞設定
                 if (!standGround)
                 {
@@ -122,6 +164,8 @@ public class PlayerController : MonoBehaviour
                     BodyAniActive("isSwing");
                     feet.SetActive(false);
                     feet_HungUp.SetActive(true);
+                    hat.SetActive(true);
+                    canJump = false;
 
                     col.direction = CapsuleDirection2D.Vertical;
                     groundBoxSize = new Vector2(1.0f, 0.5f);
@@ -147,6 +191,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     ani.SetBool("isSwing", false);
+                    hatAni.SetBool("isSwing", false);
                     feet.SetActive(true);
                     feet_HungUp.SetActive(false);
                     float front = directionFlag ? 1 : -1;
@@ -165,6 +210,7 @@ public class PlayerController : MonoBehaviour
                 if (InputX < 0)
                 {
                     GetComponent<SpriteRenderer>().flipX = true;
+                    hat.GetComponent<SpriteRenderer>().flipX = true;
                     feet_HungUp.transform.localScale = new Vector3(-1f, 1f, 1f);
 
                     perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
@@ -175,6 +221,7 @@ public class PlayerController : MonoBehaviour
                 else if (InputX > 0) //&& !shrinkLine 待修
                 {
                     GetComponent<SpriteRenderer>().flipX = false;
+                    hat.GetComponent<SpriteRenderer>().flipX = false;
                     feet_HungUp.transform.localScale = new Vector3(1f, 1f, 1f);
 
                     perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
@@ -195,23 +242,49 @@ public class PlayerController : MonoBehaviour
                 if (!standGround)
                 {
                     ani.SetBool("isSwing", false);
+                    hatAni.SetBool("isSwing", false);
                     ani.SetBool("isJump", true);
+                    hatAni.SetBool("isJump", true);
                     feet.SetActive(true);
                     feet_HungUp.SetActive(false);
                     ropeSystem.startShoot = 0;
                     float front = directionFlag ? 1 : -1;
                     transform.rotation = Quaternion.Euler(front, 0, 0);
                     twiceColGroundTimer = 0f;
+                    canJump = true;
                 }
 
-                rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
+                if (!isDash) rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
+                else
+                {
+                    canJump = true;
+                    endSwing = true;
+                }
                 releaseSwing = false;
             }
             else if (!endSwing)
             {
-                rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.08f), rig.linearVelocityY);
-                canJump = true;
-                if (standGround || !canJump)
+                if (!isDash)
+                {
+                    rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.08f), rig.linearVelocityY);
+                    if (InputX > 0)
+                    {
+                        GetComponent<SpriteRenderer>().flipX = false;
+                        feet.GetComponent<SpriteRenderer>().flipX = false;
+                        hat.GetComponent<SpriteRenderer>().flipX = false;
+                    }
+                    else if(InputX < 0)
+                    {
+                        GetComponent<SpriteRenderer>().flipX = true;
+                        feet.GetComponent<SpriteRenderer>().flipX = true;
+                        hat.GetComponent<SpriteRenderer>().flipX = true;
+                    }
+                    if (standGround || !canJump)
+                    {
+                        endSwing = true;
+                    }
+                }
+                else
                 {
                     endSwing = true;
                 }
@@ -237,12 +310,17 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            isHart = true;
+            isHurt = true;
             playerStatus.Blood -= 1;
+            if ((other.transform.position.x - transform.position.x) >= 0)
+            {
+                enemyPos = -1;
+            }
+            else enemyPos = 1;
         }
         if (other.CompareTag("Leakage"))
         {
-            isHart = true;
+            isHurt = true;
             playerStatus.Blood = 0;
         }
     }
@@ -326,6 +404,7 @@ public class PlayerController : MonoBehaviour
     private void Action()
     {
         ani.SetBool("isSwing", false);
+        hatAni.SetBool("isSwing", false);
         feet.SetActive(true);
         feet_HungUp.SetActive(false);
 
@@ -347,6 +426,8 @@ public class PlayerController : MonoBehaviour
             rig.linearVelocity = new Vector2(-0.0001f, rig.linearVelocityY);
         }
         else rig.linearVelocity = new Vector2(moveSpeed * InputX, rig.linearVelocityY);
+
+        //動畫控制
         if (InputX > 0)
         {
             if (!directionFlag)
@@ -394,7 +475,11 @@ public class PlayerController : MonoBehaviour
         if (!standGround)
         {
             jumpDelayTime += Time.deltaTime;
-            if (!isDash) BodyAniActive("isJump");
+            if (!isDash)
+            {
+                DisAni();
+                BodyAniActive("isJump");
+            }
             feet.SetActive(true);
             feetAni.SetBool("isJump", true);
             feetAni.SetBool("isWalk", false);
@@ -416,6 +501,7 @@ public class PlayerController : MonoBehaviour
         if (isDash) return;
         if (InputY < 0 && standGround)
         {
+            DisAni();
             BodyAniActive("isSquat");
             col.size = new Vector2(2.5f, 1.0f);
             col.offset = new Vector2(0, -0.6f);
@@ -428,26 +514,26 @@ public class PlayerController : MonoBehaviour
             col.offset = new Vector2(0, -0.166f);
         }
     }
-    private void SwingAction(bool flag)
-    {
-        if (!flag) return;
-    }
+
     private void DashAction()
     {
         if (!isDash) return;
 
-        /*if (IsTouchingWallLeft()) dash撞牆問題待修
+        dashDistance = Vector2.Distance(transform.position, dashOriginalPoint);
+        if (IsTouchingWallLeft())
         {
+            print("tru");
             rig.linearVelocity = new Vector2(0.0001f, rig.linearVelocityY);
+            dashDistance = 11f;
             isDash = false;
         }
         else if (IsTouchingWallRight())
         {
             rig.linearVelocity = new Vector2(-0.0001f, rig.linearVelocityY);
+            dashDistance = 11f;
             isDash = false;
-        }*/
+        }
 
-        dashDistance = Vector2.Distance(transform.position, dashOriginalPoint);
         if (dashDistance > 10.0f)
         {
             isDash = false;
@@ -481,6 +567,7 @@ public class PlayerController : MonoBehaviour
     //Shoot角色頭部動作
     void HeadControl()
     {
+        if (isHurt) return;
         //取得玩家是否正在射擊狀態
         bool readyShoot = ropeSystem.readyShoot;
         var headSpriteRenderer = Head.GetComponent<SpriteRenderer>();
@@ -529,6 +616,7 @@ public class PlayerController : MonoBehaviour
         ani.SetBool("isSwing", false);
         ani.SetBool("isShoot", false);
         ani.SetBool("isDash", false);
+        ani.SetBool("isHurt", false);
 
         hatAni.SetBool("isWalk", false);
         hatAni.SetBool("isSquat", false);
@@ -536,6 +624,13 @@ public class PlayerController : MonoBehaviour
         hatAni.SetBool("isSwing", false);
         hatAni.SetBool("isShoot", false);
         hatAni.SetBool("isDash", false);
+        hatAni.SetBool("isHurt", false);
+
+        feetAni.SetBool("isWalk", false);
+        feetAni.SetBool("isJump", false);
+        feetAni.SetBool("isSquat", false);
+        feetAni.SetBool("isDash", false);
+        feetAni.SetBool("isHurt", false);
     }
 
     private void BodyAniActive(String act)
@@ -565,6 +660,10 @@ public class PlayerController : MonoBehaviour
             case "isDash":
                 ani.SetBool("isDash", true);
                 hatAni.SetBool("isDash", true);
+                break;
+            case "isHurt":
+                ani.SetBool("isHurt", true);
+                hatAni.SetBool("isHurt", true);
                 break;
             default:
                 break;

@@ -21,6 +21,7 @@ public class PlayerStatus : MonoBehaviour
     private float reWaveTimer;
     private int maxBlood = 5;
     private int disBlood = 5;
+    private float deadTimer = 0f;
 
     void Start()
     {
@@ -30,6 +31,19 @@ public class PlayerStatus : MonoBehaviour
 
     void Update()
     {
+        if (Blood == 0)
+        {
+            deadTimer += Time.deltaTime;
+        }
+        if(deadTimer > 1.0f)
+        {
+            var x = PlayerPrefs.GetFloat("PlayerPosX");
+            var y = PlayerPrefs.GetFloat("PlayerPosY");
+            playerController.transform.position = new Vector2(x, y);
+            Blood = 5;
+            deadTimer = 0f;
+        }
+        
         WaveControl();
         BloodControl();
     }

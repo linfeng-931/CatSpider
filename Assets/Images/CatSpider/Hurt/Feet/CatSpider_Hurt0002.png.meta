@@ -122,81 +122,15 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CatSpider_Hurt0002_0
-      rect:
-        serializedVersion: 2
-        x: 24
-        y: 26
-        width: 48
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 14064904e44fd7480800000000000000
-      internalID: -8899688671686139839
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CatSpider_Hurt0002_1
-      rect:
-        serializedVersion: 2
-        x: 76
-        y: 24
-        width: 46
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 5b2f745970ffa2460800000000000000
-      internalID: 7217861760849015477
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CatSpider_Hurt0002_2
-      rect:
-        serializedVersion: 2
-        x: 124
-        y: 26
-        width: 58
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8631717058a5daf60800000000000000
-      internalID: 8047187636577047400
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: CatSpider_Hurt0002_3
       rect:
         serializedVersion: 2
-        x: 173
-        y: 28
-        width: 87
-        height: 58
+        x: 0
+        y: 0
+        width: 300
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -213,7 +147,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 45b8212e2ad364e4e994b7ffa543e6de
     internalID: 0
     vertices: []
     indices: 

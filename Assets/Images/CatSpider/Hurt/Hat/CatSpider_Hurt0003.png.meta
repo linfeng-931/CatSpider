@@ -116,12 +116,12 @@ TextureImporter:
       name: CatSpider_Hurt0003_0
       rect:
         serializedVersion: 2
-        x: 108
-        y: 172
-        width: 175
-        height: 116
+        x: 0
+        y: 0
+        width: 300
+        height: 300
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9157b10cea9544fe1acc31ff3b5904ad
     internalID: 0
     vertices: []
     indices: 

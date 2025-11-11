@@ -64,7 +64,7 @@ public class RopeSystem : MonoBehaviour
 
         playerPosition = transform.position;
 
-        if (Input.GetMouseButton(0) && !readyShoot && shootTimer > 0.5f && playerStatus.Energy >= 3f)
+        if (Input.GetMouseButton(0) && !readyShoot && shootTimer > 0.5f && playerStatus.Energy >= 3f && !playerMovement.isHurt)
         {
             readyShoot = true;
         }
@@ -84,7 +84,7 @@ public class RopeSystem : MonoBehaviour
         }
         UpdateRopePositions();
         HandleRopeLength();
-        if (Input.GetMouseButton(0) && playerMovement.isSwinging)
+        if ((Input.GetMouseButton(0) && playerMovement.isSwinging)|| playerMovement.isHurt)
         {
             shootTimer = 0f;
             startShoot = 0;
