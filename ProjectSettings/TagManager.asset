@@ -10,6 +10,7 @@ TagManager:
   - SceneChange
   - disAttached
   - Leakage
+  - HurtObject1
   layers:
   - Default
   - TransparentFX
