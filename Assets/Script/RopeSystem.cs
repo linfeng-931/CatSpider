@@ -8,8 +8,11 @@ using Unity.VisualScripting;
 public class RopeSystem : MonoBehaviour
 {
     [SerializeField] GameObject ropeHingeAnchor;
+    [SerializeField] GameObject circleMask;
     [SerializeField] DistanceJoint2D ropeJoint;
     [SerializeField] Transform crosshair;
+    [SerializeField] GameObject crosshairFaceObj;
+    [SerializeField] Transform crosshairFace;
     [SerializeField] SpriteRenderer crosshairSprite;
     [SerializeField] PlayerController playerMovement;
     [SerializeField] LineRenderer ropeRenderer;
@@ -17,6 +20,7 @@ public class RopeSystem : MonoBehaviour
     [SerializeField] float maxDirection;
     [SerializeField] float minDirection;
     [SerializeField] float climbSpeed = 30f;
+   
     public bool readyShoot;
     public float aimAngle;
     public PlayerStatus playerStatus;
@@ -25,13 +29,14 @@ public class RopeSystem : MonoBehaviour
     private bool ropeAttached;
     private Vector2 playerPosition;
     private Rigidbody2D ropeHingeAnchorRb;
-    private SpriteRenderer ropeHingeAnchorSprite;
     private List<Vector2> ropePositions = new List<Vector2>();
     private bool distanceSet;
     private bool isColliding;
     private bool shrinkComplete;
     private float shootTimer = 3f;
     private bool udFlag = false;
+    private Vector2 normalScale = new Vector2(0.05f, 0.05f);
+    private Vector2 hitScale = new Vector2(0.15f, 0.15f);
 
     void Awake()
     {
@@ -41,10 +46,9 @@ public class RopeSystem : MonoBehaviour
         shrinkComplete = false;
         playerPosition = transform.position;
         ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
-        ropeHingeAnchorSprite = ropeHingeAnchor.GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //獲取滑鼠座標
         Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
@@ -63,6 +67,8 @@ public class RopeSystem : MonoBehaviour
         var aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
 
         playerPosition = transform.position;
+        SetCrosshairPosition(aimAngle, worldMousePosition);
+        Handle(aimDirection, crosshair.transform.position);
 
         if (Input.GetMouseButton(0) && !readyShoot && shootTimer > 0.5f && playerStatus.Energy >= 3f && !playerMovement.isHurt)
         {
@@ -71,17 +77,16 @@ public class RopeSystem : MonoBehaviour
 
         if (readyShoot)
         {
-            SetCrosshairPosition(aimAngle, worldMousePosition);
             if (!Input.GetMouseButton(0))
             {
                 readyShoot = false;
                 HandleInput(aimDirection, crosshair.transform.position);
             }
         }
-        else
+        /*else
         {
             crosshairSprite.enabled = false;
-        }
+        }*/
         UpdateRopePositions();
         HandleRopeLength();
         if ((Input.GetMouseButton(0) && playerMovement.isSwinging)|| playerMovement.isHurt)
@@ -93,17 +98,12 @@ public class RopeSystem : MonoBehaviour
         if (!readyShoot && shootTimer < 2.0f)
         {
             shootTimer += Time.deltaTime;
-            //print(shootTimer);
         }
     }
 
     private void SetCrosshairPosition(float aimAngle, Vector3 mousePosition)
     {
         float dir = Mathf.Sqrt(Mathf.Pow(mousePosition.x - transform.position.x, 2) + Mathf.Pow(mousePosition.y - transform.position.y, 2));
-        if (!crosshairSprite.enabled)
-        {
-            crosshairSprite.enabled = true;
-        }
 
         float x, y;
         if (dir < maxDirection && dir > minDirection)
@@ -123,7 +123,9 @@ public class RopeSystem : MonoBehaviour
         }
 
         var crosshairPosition = new Vector3(x, y, 0);
-        crosshair.transform.position = crosshairPosition;
+        crosshair.position = crosshairPosition;
+        crosshairFace.position = crosshairPosition;
+        circleMask.transform.position = crosshairPosition;
     }
 
     //判斷線是否射到某點
@@ -136,16 +138,14 @@ public class RopeSystem : MonoBehaviour
         var hit = Physics2D.Raycast(playerPosition, aimDirection, dir, ropeLayerMask);
         if (hit.collider != null && !hit.collider.CompareTag("disAttached") && !hit.collider.CompareTag("Leakage"))
         {
-            if(startShoot == 0) startShoot = 1;
+            if (startShoot == 0) startShoot = 1;
             playerMovement.isSwinging = true;
             ropeAttached = true;
             if (!ropePositions.Contains(hit.point))
             {
-                //transform.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 2.0f), ForceMode2D.Impulse);
                 ropePositions.Add(hit.point);
                 ropeJoint.distance = Vector2.Distance(playerPosition, hit.point);
                 ropeJoint.enabled = true;
-                ropeHingeAnchorSprite.enabled = true;
             }
         }
         else
@@ -153,6 +153,39 @@ public class RopeSystem : MonoBehaviour
             ropeRenderer.enabled = false;
             ropeAttached = false;
             ropeJoint.enabled = false;
+        }
+    }
+    
+    private void Handle(Vector2 aimDirection, Vector3 aimPosition)
+    {
+        if (playerStatus.Energy < 3.0f)
+        {
+            crosshairFaceObj.SetActive(false);
+            return;
+        }
+        else
+        {
+            crosshairFaceObj.SetActive(true);
+        }
+
+        float dir = Mathf.Sqrt(Mathf.Pow(aimPosition.x - transform.position.x, 2) + Mathf.Pow(aimPosition.y - transform.position.y, 2));
+        var hit = Physics2D.Raycast(playerPosition, aimDirection, dir, ropeLayerMask);
+        if (hit.collider != null && !hit.collider.CompareTag("disAttached") && !hit.collider.CompareTag("Leakage"))
+        {
+            crosshairFace.localScale = hitScale;
+            crosshairFace.position = hit.point;
+            circleMask.SetActive(false);
+        }
+        else
+        {
+            /*if (Vector2.Distance(crosshairFace.position, hit.point) >= 8.0f)
+            {
+
+            }
+            else circleMask.SetActive(false);*/
+            circleMask.SetActive(true);
+
+            crosshairFace.localScale = normalScale;
         }
     }
 
@@ -165,7 +198,6 @@ public class RopeSystem : MonoBehaviour
         ropeRenderer.SetPosition(0, transform.position);
         ropeRenderer.SetPosition(1, transform.position);
         ropePositions.Clear();
-        ropeHingeAnchorSprite.enabled = false;
         playerMovement.releaseSwing = true;
         shrinkComplete = false;
     }

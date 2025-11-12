@@ -111,7 +111,6 @@ public class PlayerController : MonoBehaviour
             {
                 Head.SetActive(false);
                 hat.SetActive(true);
-                print("hi");
                 DisAni();
                 feet.SetActive(true);
                 feet_HungUp.SetActive(false);
@@ -207,6 +206,8 @@ public class PlayerController : MonoBehaviour
 
                 //計算垂直向量
                 Vector2 perpendicularDirection = new Vector2(0f, 0f);
+
+                //動畫控制
                 if (InputX < 0)
                 {
                     GetComponent<SpriteRenderer>().flipX = true;
@@ -215,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
                     perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
                     Vector2 leftPerpPos = (Vector2)transform.position + perpendicularDirection * -2f;
-                    if (perpendicularDirection.x > 0) perpendicularDirection.x *= -1;
+                    perpendicularDirection = new Vector2(-0.4f, 0.6f);
                     Debug.DrawLine(transform.position, leftPerpPos, UnityEngine.Color.white, 0f);
                 }
                 else if (InputX > 0) //&& !shrinkLine 待修
@@ -226,10 +227,11 @@ public class PlayerController : MonoBehaviour
 
                     perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
                     Vector2 rightPerpPos = (Vector2)transform.position + perpendicularDirection * -2f;
-                    if (perpendicularDirection.x < 0) perpendicularDirection.x *= -1;
+                    perpendicularDirection = new Vector2(0.4f, 0.6f);
                     Debug.DrawLine(transform.position, rightPerpPos, UnityEngine.Color.white, 0f);
                 }
 
+                //擺動控制
                 if (InputX != 0)
                 {
                     Vector2 force = perpendicularDirection * swingForce;
@@ -308,7 +310,7 @@ public class PlayerController : MonoBehaviour
     //碰撞偵測
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("HurtObject1"))
         {
             isHurt = true;
             playerStatus.Blood -= 1;
@@ -359,7 +361,7 @@ public class PlayerController : MonoBehaviour
     }
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.started && !isDash && !isSwinging)
+        if (context.started && !isDash && !isSwinging && !isHurt)
         {
             isDash = true;
             int front = directionFlag ? 1 : -1;
@@ -522,7 +524,6 @@ public class PlayerController : MonoBehaviour
         dashDistance = Vector2.Distance(transform.position, dashOriginalPoint);
         if (IsTouchingWallLeft())
         {
-            print("tru");
             rig.linearVelocity = new Vector2(0.0001f, rig.linearVelocityY);
             dashDistance = 11f;
             isDash = false;

@@ -1,0 +1,244 @@
+fileFormatVersion: 2
+guid: 2c263721ecef64082bad5b4e1bcf22e1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5100586795631057047
+    second: circleHole_0
+  - first:
+      213: 964053779152139969
+    second: circleHole_1
+  - first:
+      213: 4817597871747031976
+    second: circleHole_2
+  - first:
+      213: 5019507573964890595
+    second: circleHole_3
+  - first:
+      213: -3335655484599069147
+    second: circleHole_4
+  - first:
+      213: -4155343297271497779
+    second: circleHole_5
+  - first:
+      213: 2840188587828922942
+    second: circleHole_6
+  - first:
+      213: -1404356117560716535
+    second: circleHole_7
+  - first:
+      213: 957257928582036669
+    second: circleHole_8
+  - first:
+      213: 2253893561701166289
+    second: circleHole_9
+  - first:
+      213: 4940950453595975970
+    second: circleHole_10
+  - first:
+      213: 7082812915378634504
+    second: circleHole_11
+  - first:
+      213: -6954086082435396917
+    second: circleHole_12
+  - first:
+      213: -469994176636610795
+    second: circleHole_13
+  - first:
+      213: 6281902782301085164
+    second: circleHole_14
+  - first:
+      213: -6511399070356727753
+    second: circleHole_15
+  - first:
+      213: 213370504322535508
+    second: circleHole_16
+  - first:
+      213: -4470717446919576527
+    second: circleHole_17
+  - first:
+      213: -4310474189440670669
+    second: circleHole_18
+  - first:
+      213: -2197693640661424413
+    second: circleHole_19
+  - first:
+      213: -7541519973319971892
+    second: circleHole_20
+  - first:
+      213: -7615462454674882341
+    second: circleHole_21
+  - first:
+      213: 7185815462623377341
+    second: circleHole_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: circleHole_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 967ec5c55531739b0800000000000000
+      internalID: -5100586795631057047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 6f5b6ee5d8bfe4ef7ac47aa61f85f4f5
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      circleHole_0: -5100586795631057047
+      circleHole_1: 964053779152139969
+      circleHole_10: 4940950453595975970
+      circleHole_11: 7082812915378634504
+      circleHole_12: -6954086082435396917
+      circleHole_13: -469994176636610795
+      circleHole_14: 6281902782301085164
+      circleHole_15: -6511399070356727753
+      circleHole_16: 213370504322535508
+      circleHole_17: -4470717446919576527
+      circleHole_18: -4310474189440670669
+      circleHole_19: -2197693640661424413
+      circleHole_2: 4817597871747031976
+      circleHole_20: -7541519973319971892
+      circleHole_21: -7615462454674882341
+      circleHole_22: 7185815462623377341
+      circleHole_3: 5019507573964890595
+      circleHole_4: -3335655484599069147
+      circleHole_5: -4155343297271497779
+      circleHole_6: 2840188587828922942
+      circleHole_7: -1404356117560716535
+      circleHole_8: 957257928582036669
+      circleHole_9: 2253893561701166289
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
