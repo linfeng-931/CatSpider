@@ -20,11 +20,13 @@ public class RopeSystem : MonoBehaviour
     [SerializeField] float maxDirection;
     [SerializeField] float minDirection;
     [SerializeField] float climbSpeed = 30f;
+    [SerializeField] LayerMask canMoveMask;
    
     public bool readyShoot;
     public float aimAngle;
     public PlayerStatus playerStatus;
     public int startShoot = 0;
+    public float pullForce = 10f;
 
     private bool ropeAttached;
     private Vector2 playerPosition;
@@ -34,9 +36,15 @@ public class RopeSystem : MonoBehaviour
     private bool isColliding;
     private bool shrinkComplete;
     private float shootTimer = 3f;
+    private bool overDistance = false;
     private bool udFlag = false;
     private Vector2 normalScale = new Vector2(0.05f, 0.05f);
     private Vector2 hitScale = new Vector2(0.15f, 0.15f);
+    private UnityEngine.Color normalColor = new Color(1f,1f,1f,1f);
+    private UnityEngine.Color canMoveHitColor = new Color(1f, 0.741f, 0.231f, 1f);
+    private bool isPull = false;
+    private RaycastHit2D moveObj;
+    private bool moveOverDistance = false;
 
     void Awake()
     {
@@ -83,16 +91,16 @@ public class RopeSystem : MonoBehaviour
                 HandleInput(aimDirection, crosshair.transform.position);
             }
         }
-        /*else
-        {
-            crosshairSprite.enabled = false;
-        }*/
+
         UpdateRopePositions();
         HandleRopeLength();
-        if ((Input.GetMouseButton(0) && playerMovement.isSwinging)|| playerMovement.isHurt)
+        MoveObject();
+
+        if ((Input.GetMouseButton(0) && playerMovement.isSwinging) || playerMovement.isHurt || (Input.GetMouseButton(0) && isPull) || Vector2.Distance(ropeRenderer.GetPosition(0), ropeRenderer.GetPosition(1)) > 20f)
         {
             shootTimer = 0f;
             startShoot = 0;
+            isPull = false;
             ResetRope();
         }
         if (!readyShoot && shootTimer < 2.0f)
@@ -136,6 +144,8 @@ public class RopeSystem : MonoBehaviour
         ropeRenderer.enabled = true;
         float dir = Mathf.Sqrt(Mathf.Pow(aimPosition.x - transform.position.x, 2) + Mathf.Pow(aimPosition.y - transform.position.y, 2));
         var hit = Physics2D.Raycast(playerPosition, aimDirection, dir, ropeLayerMask);
+        var moveObjHit = Physics2D.Raycast(playerPosition, aimDirection, dir, canMoveMask);
+
         if (hit.collider != null && !hit.collider.CompareTag("disAttached") && !hit.collider.CompareTag("Leakage"))
         {
             if (startShoot == 0) startShoot = 1;
@@ -146,6 +156,18 @@ public class RopeSystem : MonoBehaviour
                 ropePositions.Add(hit.point);
                 ropeJoint.distance = Vector2.Distance(playerPosition, hit.point);
                 ropeJoint.enabled = true;
+            }
+        }
+        else if(moveObjHit.collider != null)
+        {
+            ropeAttached = true;
+            isPull = true;
+            if (!ropePositions.Contains(moveObjHit.point))
+            {
+                ropePositions.Add(moveObjHit.point);
+                ropeJoint.distance = Vector2.Distance(playerPosition, moveObjHit.point);
+                ropeJoint.enabled = true;
+                moveObj = moveObjHit;
             }
         }
         else
@@ -170,21 +192,26 @@ public class RopeSystem : MonoBehaviour
 
         float dir = Mathf.Sqrt(Mathf.Pow(aimPosition.x - transform.position.x, 2) + Mathf.Pow(aimPosition.y - transform.position.y, 2));
         var hit = Physics2D.Raycast(playerPosition, aimDirection, dir, ropeLayerMask);
+        var moveObjHit = Physics2D.Raycast(playerPosition, aimDirection, dir, canMoveMask);
+         
         if (hit.collider != null && !hit.collider.CompareTag("disAttached") && !hit.collider.CompareTag("Leakage"))
         {
             crosshairFace.localScale = hitScale;
             crosshairFace.position = hit.point;
+            crosshairSprite.color = normalColor;
+            circleMask.SetActive(false);
+        }
+        else if(moveObjHit.collider != null)
+        {
+            crosshairFace.localScale = hitScale;
+            crosshairFace.position = moveObjHit.point;
+            crosshairSprite.color = canMoveHitColor;
             circleMask.SetActive(false);
         }
         else
         {
-            /*if (Vector2.Distance(crosshairFace.position, hit.point) >= 8.0f)
-            {
-
-            }
-            else circleMask.SetActive(false);*/
             circleMask.SetActive(true);
-
+            crosshairSprite.color = normalColor;
             crosshairFace.localScale = normalScale;
         }
     }
@@ -200,6 +227,8 @@ public class RopeSystem : MonoBehaviour
         ropePositions.Clear();
         playerMovement.releaseSwing = true;
         shrinkComplete = false;
+        moveOverDistance = false;
+        overDistance = false;
     }
 
     //更新線的狀態
@@ -246,12 +275,13 @@ public class RopeSystem : MonoBehaviour
 
     private void HandleRopeLength()
     {
+        if (isPull) return;
+
         if (playerMovement.shrinkLine)
         {
             if (!shrinkComplete)
             {
                 ropeJoint.distance = Mathf.MoveTowards(ropeJoint.distance, 0f, Time.deltaTime * 50f);
-                //transform.GetComponent<Rigidbody2D>().MovePosition(Vector2.MoveTowards(transform.GetComponent<Rigidbody2D>().position, crosshair.position, 70f*Time.deltaTime));
                 float distance = Vector2.Distance(transform.position, crosshair.position);
                 if (distance < 1.0f)
                 {
@@ -283,12 +313,16 @@ public class RopeSystem : MonoBehaviour
         }
         else if (playerMovement.InputY < 0f && ropeAttached)
         {
-            ropeJoint.distance += Time.deltaTime * climbSpeed;
-            if (udFlag)
+            overDistance = Vector2.Distance(ropeRenderer.GetPosition(0), ropeRenderer.GetPosition(1)) > 10f ? true : false;
+            if (!overDistance)
             {
-                playerMovement.groundpoint.position = new Vector2(playerPosition.x, playerPosition.y-1.7f);
-                udFlag = false;
-            }   
+                ropeJoint.distance += Time.deltaTime * climbSpeed;
+                if (udFlag)
+                {
+                    playerMovement.groundpoint.position = new Vector2(playerPosition.x, playerPosition.y - 1.7f);
+                    udFlag = false;
+                }
+            }
         }
         else
         {
@@ -297,6 +331,29 @@ public class RopeSystem : MonoBehaviour
                 playerMovement.groundpoint.position = new Vector2(playerPosition.x, playerPosition.y-1.7f);
                 udFlag = false;
             }  
+        }
+    }
+
+    void MoveObject()
+    {
+        if (!isPull) return;
+
+        Rigidbody2D hitRb = moveObj.collider.attachedRigidbody;
+        if (hitRb != null)
+        {
+            Vector2 ropeEnd = hitRb.position;
+            ropeJoint.distance = Vector2.Distance(playerPosition, ropeEnd);
+            crosshair.position = ropeEnd;
+            ropeRenderer.SetPosition(0, ropeEnd);
+            Debug.DrawLine(transform.position, ropeEnd, UnityEngine.Color.white);
+            moveOverDistance = Vector2.Distance(ropeRenderer.GetPosition(0), ropeRenderer.GetPosition(1)) > 10f ? true : false;
+
+            if (playerMovement.InputY > 0f || moveOverDistance)
+            {
+                print("yes");
+                Vector2 pullDir = (playerPosition - ropeEnd).normalized;
+                hitRb.AddForce(pullDir * pullForce, ForceMode2D.Force);
+            }
         }
     }
 

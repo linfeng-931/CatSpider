@@ -123,7 +123,9 @@ public class PlayerController : MonoBehaviour
                 dashObj.SetActive(false);
                 col.size = new Vector2(2.5f, 2.0f);
                 col.offset = new Vector2(0, -0.166f);
-
+                float front = directionFlag ? 1 : -1;
+                transform.rotation = Quaternion.Euler(front, 0, 0);
+            
                 BodyAniActive("isHurt");
                 feetAni.SetBool("isHurt", true);
             }
@@ -268,7 +270,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (!isDash)
                 {
-                    rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.08f), rig.linearVelocityY);
+                    rig.linearVelocity = new Vector2(rig.linearVelocityX + (moveSpeed * InputX * 0.01f), rig.linearVelocityY);
                     if (InputX > 0)
                     {
                         GetComponent<SpriteRenderer>().flipX = false;
@@ -320,10 +322,30 @@ public class PlayerController : MonoBehaviour
             }
             else enemyPos = 1;
         }
+        if (other.CompareTag("DashObject") && !isDash)
+        {
+            isHurt = true;
+            playerStatus.Blood -= 1;
+            if ((other.transform.position.x - transform.position.x) >= 0)
+            {
+                enemyPos = -1;
+            }
+            else enemyPos = 1;
+        }
         if (other.CompareTag("Leakage"))
         {
             isHurt = true;
             playerStatus.Blood = 0;
+        }
+        if (other.CompareTag("Edge") && isSwinging)
+        {
+            ResetSwing();
+            float front = directionFlag ? 1 : -1;
+            transform.rotation = Quaternion.Euler(front, 0, 0);
+            ropeSystem.ResetRope();
+            canJump = false;
+            transform.position = new Vector2(transform.position.x, transform.position.y + 4.0f);
+            rig.linearVelocity = new Vector2(rig.linearVelocity.x, 15f);
         }
     }
     
@@ -331,6 +353,28 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         InputX = context.ReadValue<Vector2>().x;
+        if (InputX > 0)
+        {
+            if (!directionFlag)
+            {
+                GetComponent<SpriteRenderer>().flipX = false;
+                feet.GetComponent<SpriteRenderer>().flipX = false;
+                hat.GetComponent<SpriteRenderer>().flipX = false;
+                feet_HungUp.transform.localScale = new Vector3(1f, 1f, 1f);
+                directionFlag = true;
+            }
+        }
+        else if (InputX < 0)
+        {
+            if (directionFlag)
+            {
+                GetComponent<SpriteRenderer>().flipX = true;
+                feet.GetComponent<SpriteRenderer>().flipX = true;
+                hat.GetComponent<SpriteRenderer>().flipX = true;
+                feet_HungUp.transform.localScale = new Vector3(-1f, 1f, 1f);
+                directionFlag = false;
+            }
+        }
     }
     public void Squat(InputAction.CallbackContext context)
     {

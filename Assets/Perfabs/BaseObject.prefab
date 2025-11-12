@@ -490,6 +490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7153008761481166686}
   - component: {fileID: 3148488400489630552}
+  - component: {fileID: 3330167865886071141}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -526,6 +527,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SaveLoad
   player: {fileID: 5772248655531085079}
   playerStatus: {fileID: 6664382431386633124}
+--- !u!114 &3330167865886071141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479440516829926414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfd0e630adf5a47c8aa3839faa4961e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BackgroundMoveControl
+  camera: {fileID: 0}
+  player: {fileID: 7115731463316056321}
+  farBg: {fileID: 0}
+  frontBg: {fileID: 0}
 --- !u!1 &1875194000138295775
 GameObject:
   m_ObjectHideFlags: 0
@@ -3073,6 +3090,10 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 739535393466416165, guid: 3565667d9ddda4c15b88b13574a15a4a, type: 3}
+      propertyPath: pullForce
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 739535393466416165, guid: 3565667d9ddda4c15b88b13574a15a4a, type: 3}
       propertyPath: circleMask
       value: 
       objectReference: {fileID: 8712094832557230391}
@@ -3088,6 +3109,10 @@ PrefabInstance:
       propertyPath: crosshairFaceObj
       value: 
       objectReference: {fileID: 2602787138954271239}
+    - target: {fileID: 739535393466416165, guid: 3565667d9ddda4c15b88b13574a15a4a, type: 3}
+      propertyPath: canMoveMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: 1889034119262925746, guid: 3565667d9ddda4c15b88b13574a15a4a, type: 3}
       propertyPath: m_Enabled
       value: 0

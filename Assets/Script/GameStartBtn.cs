@@ -12,7 +12,7 @@ public class GameStartBtn : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("map1");
+            SceneManager.LoadScene("map1");  
         }
     }
     public void LoadGameBtn()
@@ -21,5 +21,15 @@ public class GameStartBtn : MonoBehaviour
 
         string lastScene = PlayerPrefs.GetString("LastScene");
         SceneManager.LoadScene(lastScene);
+    }
+
+    public void CloseWarning()
+    {
+        NewGameHint.SetActive(false);
+    }
+    public void ContinueWarning()
+    {
+        PlayerPrefs.DeleteAll();
+        SceneManager.LoadScene("map1");  
     }
 }

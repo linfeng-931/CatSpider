@@ -6,6 +6,11 @@ public class SaveLoad : MonoBehaviour
     public GameObject player;
     public PlayerStatus playerStatus;
 
+    public void Awake()
+    {
+        PlayerPrefs.SetFloat("PlayerPosX", player.transform.position.x);
+        PlayerPrefs.SetFloat("PlayerPosY", player.transform.position.y);
+    }
     public void Save()
     {
         int blood = playerStatus.Blood;
