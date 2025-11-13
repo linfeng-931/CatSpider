@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public bool isHurt;
     public bool isInteract;
     public float hurtMoveDistance = 5.0f;
+    public bool isShoot = false;
 
     private Rigidbody2D rig;
     private Animator ani;
@@ -458,6 +459,16 @@ public class PlayerController : MonoBehaviour
         JumpAction();
         DashAction();
         MoveAction();
+        if (isShoot)
+        {
+            BodyAniActive("isShoot");
+        }
+        else
+        {
+            ani.SetBool("isShoot", false);
+            hatAni.SetBool("isShoot", false);
+
+        }
     }
     private void MoveAction()
     {
@@ -635,16 +646,28 @@ public class PlayerController : MonoBehaviour
         if (aimAngle < range || aimAngle > 360f - range)
         {
             Head.SetActive(true);
-            headSpriteRenderer.flipX = false;
+            GetComponent<SpriteRenderer>().flipX = false;
+            hat.GetComponent<SpriteRenderer>().flipX = false;
+            feet.GetComponent<SpriteRenderer>().flipX = false;
             hatSpriteRenderer.flipX = false;
+            headSpriteRenderer.flipX = false;
+            if (InputX < 0) feetAni.SetBool("isShoot", true);
+            else feetAni.SetBool("isShoot", false);
+            
             Head.transform.rotation = Quaternion.Euler(0f, 0f, aimAngle);
             hat.SetActive(false);
         }
         else if (aimAngle > 180f - range && aimAngle < 180f + range)
         {
             Head.SetActive(true);
+            GetComponent<SpriteRenderer>().flipX = true;
+            hat.GetComponent<SpriteRenderer>().flipX = true;
+            feet.GetComponent<SpriteRenderer>().flipX = true;
             headSpriteRenderer.flipX = true;
             hatSpriteRenderer.flipX = true;
+            if (InputX > 0) feetAni.SetBool("isShoot", true);
+            else feetAni.SetBool("isShoot", false);
+
             Head.transform.rotation = Quaternion.Euler(0f, 0f, aimAngle - 180.0f);
             hat.SetActive(false);
         }

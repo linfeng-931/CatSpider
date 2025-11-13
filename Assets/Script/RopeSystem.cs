@@ -56,7 +56,7 @@ public class RopeSystem : MonoBehaviour
         ropeHingeAnchorRb = ropeHingeAnchor.GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         //獲取滑鼠座標
         Vector3 worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
@@ -81,6 +81,14 @@ public class RopeSystem : MonoBehaviour
         if (Input.GetMouseButton(0) && !readyShoot && shootTimer > 0.5f && playerStatus.Energy >= 3f && !playerMovement.isHurt)
         {
             readyShoot = true;
+            playerMovement.isShoot = true;
+            playerMovement.Head.SetActive(true);
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            playerMovement.isShoot = false;
+            playerMovement.Head.SetActive(false);
+            print("up");
         }
 
         if (readyShoot)

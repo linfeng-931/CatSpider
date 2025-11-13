@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6e39487adb70e4fc18fedb2723c3dea1
+guid: e0757a816b93e44b19ebdcb9c0ff259e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2669128395277521426
-    second: CatSpider_Walk0003_0
+      213: -5120074388979254218
+    second: CatSpider_Body0001_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CatSpider_Walk0003_0
+      name: CatSpider_Body0001_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 212dc644226aa0520800000000000000
-      internalID: 2669128395277521426
+      spriteID: 63cf0557877d1f8b0800000000000000
+      internalID: -5120074388979254218
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4dce085bdcf804c4fa38287cc22c338a
+    spriteID: 63c2e6f5892ae4b6d8b7d09e629d174f
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CatSpider_Walk0003_0: 2669128395277521426
+      CatSpider_Body0001_0: -5120074388979254218
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
