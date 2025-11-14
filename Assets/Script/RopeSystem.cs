@@ -313,6 +313,7 @@ public class RopeSystem : MonoBehaviour
                 GetComponent<DistanceJoint2D>().enabled = true;
                 playerMovement.isSwinging = true;
                 ropeJoint.distance -= Time.deltaTime * climbSpeed * 30f;
+                playerMovement.twiceColGround = true;
             }
             else
             {

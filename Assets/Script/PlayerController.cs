@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public bool isInteract;
     public float hurtMoveDistance = 5.0f;
     public bool isShoot = false;
+    public bool twiceColGround = false;
 
     private Rigidbody2D rig;
     private Animator ani;
@@ -46,7 +47,6 @@ public class PlayerController : MonoBehaviour
     private Animator hatAni;
     private CapsuleCollider2D col;
     public bool endSwing = true;
-    private bool twiceColGround = false;
     private bool isDash = false;
     private Vector2 boxSize = new Vector2(0.1f, 1.5f);
     private Vector2 groundBoxSize = new Vector2(2.3f, 0.1f);
