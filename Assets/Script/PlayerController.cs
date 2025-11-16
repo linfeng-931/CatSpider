@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
         standGround = Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask);
         colUp = Physics2D.OverlapBox(upCheck.position, groundBoxSize, .2f, groundMask);
         transform.GetChild(1).rotation = Quaternion.identity;
-
+ 
         //hurt狀態，其他狀態皆抵銷
         if (isHurt)
         {
@@ -258,7 +258,7 @@ public class PlayerController : MonoBehaviour
                     twiceColGroundTimer = 0f;
                     canJump = true;
                 }
-
+                print(canJump);
                 if (!isDash) rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
                 else
                 {
@@ -294,7 +294,7 @@ public class PlayerController : MonoBehaviour
                     endSwing = true;
                 }
             }
-
+            
             if (standGround && twiceColGround)
             {
                 ResetSwing();
@@ -383,6 +383,7 @@ public class PlayerController : MonoBehaviour
     }
     public void Jump(InputAction.CallbackContext context)
     {
+        print(canJump);
         if (context.started && canJump)
         {
             rig.linearVelocity = new Vector2(rig.linearVelocity.x, jumpForce);
@@ -546,7 +547,7 @@ public class PlayerController : MonoBehaviour
             ani.SetBool("isJump", false);
             hatAni.SetBool("isJump", false);
             feetAni.SetBool("isJump", false);
-            if (jumpDelayTime > 0.1f || standGround)
+            if (jumpDelayTime > 0.1f)
             {
                 jumpDelayTime = 0f;
                 canJump = true;

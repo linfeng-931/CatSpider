@@ -12,6 +12,7 @@ public class PlayerStatus : MonoBehaviour
     public float Energy = 10.0f;
     public int Blood = 5;
     public UnityEngine.Color[] blood_color;
+    public float gameTimer = 0.0f;
 
     private Transform wave;
     private bool changeWave = false;
@@ -31,6 +32,8 @@ public class PlayerStatus : MonoBehaviour
 
     void Update()
     {
+        gameTimer += Time.deltaTime;
+        
         if (Blood == 0)
         {
             deadTimer += Time.deltaTime;

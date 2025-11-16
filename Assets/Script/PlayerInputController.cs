@@ -53,6 +53,7 @@ public class PlayerInputController : MonoBehaviour
         {
             Menu.SetActive(true);
             Time.timeScale = 0;
+            Menu.GetComponent<Menu>().ShowDetail();
             rePlayerInput = playerInput.currentActionMap.name;
             playerInput.SwitchCurrentActionMap("UI");
         }

@@ -11,6 +11,7 @@ public class SaveLoad : MonoBehaviour
         PlayerPrefs.SetFloat("PlayerPosX", player.transform.position.x);
         PlayerPrefs.SetFloat("PlayerPosY", player.transform.position.y);
     }
+
     public void Save()
     {
         int blood = playerStatus.Blood;
@@ -18,6 +19,9 @@ public class SaveLoad : MonoBehaviour
         PlayerPrefs.SetFloat("PlayerPosX", player.transform.position.x);
         PlayerPrefs.SetFloat("PlayerPosY", player.transform.position.y);
         PlayerPrefs.SetInt("Blood", blood);
+
+        PlayerPrefs.SetFloat("GameTime", playerStatus.gameTimer);
+
         PlayerPrefs.Save();
     }
 
@@ -27,6 +31,7 @@ public class SaveLoad : MonoBehaviour
         float playerPosX = PlayerPrefs.GetFloat("PlayerPosX");
         float playerPosY = PlayerPrefs.GetFloat("PlayerPosY");
         int blood = PlayerPrefs.GetInt("Blood");
+
         player.transform.position = new Vector2(playerPosX, playerPosY);
         playerStatus.Blood = blood;
     }
