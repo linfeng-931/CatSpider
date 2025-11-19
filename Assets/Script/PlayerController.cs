@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
     private bool readyHurt = false;
     private int enemyPos = 1;
     private Vector2 hurtStartPos;
+    private bool mudDebuff = false;
+    private float reMoveSpeed = 0f;
     //private bool autoJump = false;
 
     //子物件
@@ -348,8 +350,24 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector2(transform.position.x, transform.position.y + 4.0f);
             rig.linearVelocity = new Vector2(rig.linearVelocity.x, 15f);
         }
+        if (other.CompareTag("Mud") && !mudDebuff)
+        {
+            reMoveSpeed = moveSpeed;
+            moveSpeed *= 0.1f;
+            canJump = false;
+            mudDebuff = true;
+        }
     }
-    
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Mud"))
+        {
+            moveSpeed = reMoveSpeed;
+            canJump = true;
+            mudDebuff = false;
+        }
+    }
+
     //玩家控制
     public void Move(InputAction.CallbackContext context)
     {

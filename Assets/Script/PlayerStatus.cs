@@ -7,6 +7,7 @@ public class PlayerStatus : MonoBehaviour
     public GameObject BloodObj;
     public PlayerController playerController; //減速改速度時用到
     public RopeSystem ropeSystem;
+    public SpiderWebControl spiderWebControl;
 
     //數值與設定
     public float Energy = 10.0f;
@@ -53,7 +54,7 @@ public class PlayerStatus : MonoBehaviour
 
     void WaveControl()
     {
-        if (ropeSystem.startShoot == 0)
+        if (ropeSystem.startShoot == 0 && spiderWebControl.startShoot == 0)
         {
             reWaveTimer += Time.deltaTime;
         }
@@ -65,7 +66,14 @@ public class PlayerStatus : MonoBehaviour
             Energy -= 3.0f;
             moveRange = (10.0f - Energy) * 0.3f;
         }
-        if (reWaveTimer > 4.0f)
+        if(spiderWebControl.startShoot == 1)
+        {
+            reWaveTimer = 0f;
+            spiderWebControl.startShoot = 0;
+            Energy -= 2.0f;
+            moveRange = (10.0f - Energy) * 0.2f;
+        }
+        if (reWaveTimer > 2.0f)
         {
             if (Energy < 10f) Energy += 0.005f;
         }

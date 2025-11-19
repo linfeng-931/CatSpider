@@ -8,12 +8,14 @@ public class EnemyController : MonoBehaviour
     public Animator feetAni;
     public Transform frontPoint;
     public Transform frontGroundPoint;
+    public Transform centerPoint;
     public float MoveSpeed;
     public float Attack;
     public float LookAroundTime;
     public float WalkTime;
     public float IdleTime;
     public LayerMask groundMask;
+    public LayerMask spiderWebMask;
     public Vector3 frontPointOffset;
     public Vector3 frontGroundPointOffset;
 
@@ -22,17 +24,33 @@ public class EnemyController : MonoBehaviour
     private float lookAroundTimer;
     private int action; //1-idle, 2-walk, 3-lookAround
     private bool flip;
+    private float reMoveSpeed;
+    private bool webDebuff;
 
     void Start()
     {
         action = 1;
         flip = false;
+        webDebuff = false;
     }
 
     void Update()
     {
         bool standGround = Physics2D.OverlapCircle(frontGroundPoint.position, 0.1f, groundMask);
         bool colWall = Physics2D.OverlapCircle(frontPoint.position, 0.1f, groundMask);
+        bool isWeb = Physics2D.OverlapCircle(frontPoint.position, 0.5f, spiderWebMask);
+
+        if (isWeb && !webDebuff)
+        {
+            reMoveSpeed = MoveSpeed;
+            MoveSpeed *= 0.1f;
+            webDebuff = true;
+        }
+        else if(!isWeb && webDebuff)
+        {
+            MoveSpeed = reMoveSpeed;
+            webDebuff = false;
+        }
 
         transform.GetComponent<SpriteRenderer>().flipX = flip;
         int dir = flip ? 1 : -1;
@@ -93,5 +111,26 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.DrawWireSphere(frontGroundPoint.position, 0.1f);
         Gizmos.DrawWireSphere(frontPoint.position, 0.1f);
+        Gizmos.DrawWireSphere(centerPoint.position, 0.5f);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("SpiderWeb"))
+        {
+            
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("SpiderWeb"))
+        {
+            reMoveSpeed = MoveSpeed;
+            if(!webDebuff){
+                MoveSpeed = reMoveSpeed;
+                webDebuff = false;
+            }
+        }
     }
 }
