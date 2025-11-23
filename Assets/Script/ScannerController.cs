@@ -52,34 +52,38 @@ public class ScannerController : MonoBehaviour
     {
         for (int i = 0; i < CollectionPoint.Length; i++)
         {
-            RectTransform collectionTransform = collection.transform.GetChild(i).GetComponent<RectTransform>();
-            //點位置
-            var dir = (CollectionPoint[i].position - PlayerPos.position).normalized;
-            var distance = Vector2.Distance(PlayerPos.position, CollectionPoint[i].position);
-            var distancePercent = Mathf.Clamp01(distance / range);
-            distance = distancePercent * range;
-            Vector2 offset = new Vector2((distance * dir).x, (distance * dir).y);
-            collectionTransform.anchoredPosition = player.GetComponent<RectTransform>().anchoredPosition + offset;
+            if(CollectionPoint[i] != null){
+                RectTransform collectionTransform = collection.transform.GetChild(i).GetComponent<RectTransform>();
+                //點位置
+                var dir = (CollectionPoint[i].position - PlayerPos.position).normalized;
+                var distance = Vector2.Distance(PlayerPos.position, CollectionPoint[i].position);
+                var distancePercent = Mathf.Clamp01(distance / range);
+                distance = distancePercent * range;
+                Vector2 offset = new Vector2((distance * dir).x, (distance * dir).y);
+                collectionTransform.anchoredPosition = player.GetComponent<RectTransform>().anchoredPosition + offset;
 
-            //點大小
-            var scale = 1f + ((1 - distancePercent) * 2);
-            collectionTransform.localScale = new Vector3(pointScale.x * scale, pointScale.y * scale, pointScale.z);
+                //點大小
+                var scale = 1f + ((1 - distancePercent) * 2);
+                collectionTransform.localScale = new Vector3(pointScale.x * scale, pointScale.y * scale, pointScale.z);
+            }
         }
 
         for (int i = 0; i < NpcPoint.Length; i++)
         {
-            RectTransform npcTransform = npc.transform.GetChild(i).GetComponent<RectTransform>();
-            //點位置
-            var dir = (NpcPoint[i].position - PlayerPos.position).normalized;
-            var distance = Vector2.Distance(PlayerPos.position, NpcPoint[i].position);
-            var distancePercent = Mathf.Clamp01(distance / range);
-            distance = distancePercent * range;
-            Vector2 offset = new Vector2((distance * dir).x, (distance * dir).y);
-            npcTransform.anchoredPosition = player.GetComponent<RectTransform>().anchoredPosition + offset;
+            if(NpcPoint[i] != null){
+                RectTransform npcTransform = npc.transform.GetChild(i).GetComponent<RectTransform>();
+                //點位置
+                var dir = (NpcPoint[i].position - PlayerPos.position).normalized;
+                var distance = Vector2.Distance(PlayerPos.position, NpcPoint[i].position);
+                var distancePercent = Mathf.Clamp01(distance / range);
+                distance = distancePercent * range;
+                Vector2 offset = new Vector2((distance * dir).x, (distance * dir).y);
+                npcTransform.anchoredPosition = player.GetComponent<RectTransform>().anchoredPosition + offset;
 
-            //點大小
-            var scale = 1f + ((1 - distancePercent) * 2);
-            npcTransform.localScale = new Vector3(pointScale.x * scale, pointScale.y * scale, pointScale.z);
+                //點大小
+                var scale = 1f + ((1 - distancePercent) * 2);
+                npcTransform.localScale = new Vector3(pointScale.x * scale, pointScale.y * scale, pointScale.z);
+            }
         }
     }
 }
