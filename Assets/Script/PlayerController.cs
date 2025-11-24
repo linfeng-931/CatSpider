@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 hurtStartPos;
     private bool mudDebuff = false;
     private float reMoveSpeed = 0f;
+    private bool canInteract = false;
     //private bool autoJump = false;
 
     //子物件
@@ -357,6 +358,10 @@ public class PlayerController : MonoBehaviour
             canJump = false;
             mudDebuff = true;
         }
+        if (other.CompareTag("Interactive"))
+        {
+            canInteract = true;
+        }
     }
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -365,6 +370,10 @@ public class PlayerController : MonoBehaviour
             moveSpeed = reMoveSpeed;
             canJump = true;
             mudDebuff = false;
+        }
+        if (other.CompareTag("Interactive"))
+        {
+            canInteract = false;
         }
     }
 
@@ -452,7 +461,7 @@ public class PlayerController : MonoBehaviour
 
     public void Interactive(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started && canInteract)
         {
             isInteract = true;
         }
