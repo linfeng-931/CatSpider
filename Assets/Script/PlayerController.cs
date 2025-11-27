@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public Transform rightCheck;
     public Transform upCheck;
     public LayerMask groundMask;
+    public LayerMask canMove;
     public bool isSwinging = false;
     public bool releaseSwing = false;
     public Vector2 lastSwingDirection;
@@ -104,7 +105,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        standGround = Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask);
+        if(Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask) || Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, canMove))
+        {
+            standGround = true;
+        }
+        else
+        {
+            standGround = false;
+        }
         colUp = Physics2D.OverlapBox(upCheck.position, groundBoxSize, .2f, groundMask);
         transform.GetChild(1).rotation = Quaternion.identity;
  
@@ -143,6 +151,7 @@ public class PlayerController : MonoBehaviour
                 hatAni.SetBool("isHurt", false);
                 feetAni.SetBool("isHurt", false);
                 feet.SetActive(false);
+                canJump = true;
                 hurtTimer = 0f;
             }
             if (!hurtMove)
@@ -225,7 +234,7 @@ public class PlayerController : MonoBehaviour
                     perpendicularDirection = new Vector2(-0.4f, 0.6f);
                     Debug.DrawLine(transform.position, leftPerpPos, UnityEngine.Color.white, 0f);
                 }
-                else if (InputX > 0) //&& !shrinkLine 待修
+                else if (InputX > 0)
                 {
                     GetComponent<SpriteRenderer>().flipX = false;
                     hat.GetComponent<SpriteRenderer>().flipX = false;
