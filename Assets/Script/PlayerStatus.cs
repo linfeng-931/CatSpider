@@ -75,7 +75,7 @@ public class PlayerStatus : MonoBehaviour
         }
         if (reWaveTimer > 2.0f)
         {
-            if (Energy < 10f) Energy += 0.005f;
+            if (Energy < 10f) Energy += 0.01f;
         }
 
         float energyPercent = Energy / 10f; // 0 ~ 1
