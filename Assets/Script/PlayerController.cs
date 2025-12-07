@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask) || Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, canMove))
+        if(Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask))
         {
             standGround = true;
         }
