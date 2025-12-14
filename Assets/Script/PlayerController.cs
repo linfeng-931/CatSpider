@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask))
+        if(Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask) || Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, canMove))
         {
             standGround = true;
         }
@@ -660,11 +660,15 @@ public class PlayerController : MonoBehaviour
     //Shoot角色頭部動作
     void HeadControl()
     {
-        if (isHurt) return;
-        //取得玩家是否正在射擊狀態
-        bool readyShoot = ropeSystem.readyShoot;
         var headSpriteRenderer = Head.GetComponent<SpriteRenderer>();
         var hatSpriteRenderer = Head.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        if (isHurt || !standGround){
+            hatSpriteRenderer.enabled = false;
+            headSpriteRenderer.enabled = false;
+            return;
+        }
+        //取得玩家是否正在射擊狀態
+        bool readyShoot = ropeSystem.readyShoot;
 
         //1
         if (!readyShoot || isSwinging)
@@ -709,7 +713,7 @@ public class PlayerController : MonoBehaviour
             hat.SetActive(false);
         }
         headSpriteRenderer.enabled = true;
-
+        hatSpriteRenderer.enabled = true;
     }
 
     //動畫控制
