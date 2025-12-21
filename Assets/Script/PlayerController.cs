@@ -270,7 +270,6 @@ public class PlayerController : MonoBehaviour
                     twiceColGroundTimer = 0f;
                     canJump = true;
                 }
-                print(canJump);
                 if (!isDash) rig.AddForce(lastSwingDirection * releaseForce, ForceMode2D.Impulse);
                 else
                 {
@@ -419,7 +418,6 @@ public class PlayerController : MonoBehaviour
     }
     public void Jump(InputAction.CallbackContext context)
     {
-        print(canJump);
         if (context.started && canJump)
         {
             rig.linearVelocity = new Vector2(rig.linearVelocity.x, jumpForce);

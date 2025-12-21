@@ -85,7 +85,6 @@ public class DropObjControl : MonoBehaviour
         //如果玩家在水管上
         if(Vector2.Distance(Player.transform.position, keyPoint.position) < 15.0f)
         {
-            print(rotateTargetDown);
             rotateTargetDown = 351f - 0.1f*Vector2.Distance(Player.transform.position, keyPoint.position);
             rotateTargetUp = 355f - 0.2f*Vector2.Distance(Player.transform.position, keyPoint.position);
         }

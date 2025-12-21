@@ -88,7 +88,6 @@ public class RopeSystem : MonoBehaviour
         {
             playerMovement.isShoot = false;
             playerMovement.Head.SetActive(false);
-            print("up");
         }
 
         if (readyShoot)
@@ -359,7 +358,6 @@ public class RopeSystem : MonoBehaviour
 
             if (playerMovement.InputY > 0f || moveOverDistance)
             {
-                print("yes");
                 Vector2 pullDir = (playerPosition - ropeEnd).normalized;
                 hitRb.AddForce(pullDir * pullForce, ForceMode2D.Force);
             }

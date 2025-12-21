@@ -15,6 +15,7 @@ TagManager:
   - DashObject
   - Mud
   - SpiderWeb
+  - MovingObj
   layers:
   - Default
   - TransparentFX

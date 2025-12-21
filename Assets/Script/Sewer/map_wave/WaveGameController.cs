@@ -31,7 +31,6 @@ public class WaveGameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(turnLine);
         if (turnLine)
         {
             TurnLine();
