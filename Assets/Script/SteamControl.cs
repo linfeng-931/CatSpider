@@ -4,6 +4,8 @@ public class SteamControl : MonoBehaviour
 {
     public float ActiveTime;
     public float DisActiveTime;
+    public bool canHurt = true;
+    
 
     private float Timer;
     private bool isActive;
@@ -23,14 +25,14 @@ public class SteamControl : MonoBehaviour
         {
             isActive = true;
             Timer = 0f;
-            transform.GetComponent<BoxCollider2D>().enabled = true;
+            if(canHurt)transform.GetComponent<BoxCollider2D>().enabled = true;
             ani.SetBool("isActive", true);
         }
         if(Timer >= ActiveTime && isActive)
         {
             isActive = false;
             Timer = 0f;
-            transform.GetComponent<BoxCollider2D>().enabled = false;
+            if(canHurt)transform.GetComponent<BoxCollider2D>().enabled = false;
             ani.SetBool("isActive", false);
         }
 

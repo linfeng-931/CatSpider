@@ -11,6 +11,8 @@ public class WaveGameController : MonoBehaviour
     public Vector3 maxSize = new Vector3(1.5f, 1.5f, 1f);
     public Vector3 minSize = new Vector3(0.5f, 0.5f, 1f);
     public PlayerInput playerInput;
+    public BoxCollider2D[] otherObj;
+    public int[] otherObjIndex;
 
     private int index = 1; //0近,1,2遠
     private bool turnLine = false;
@@ -54,6 +56,12 @@ public class WaveGameController : MonoBehaviour
             else if(index == 0 && input<0) return;
 
             map[index].enabled = false;
+            for(int i = 0; i<otherObj.Length; i++)
+            {
+                if(otherObjIndex[i]==index){
+                    otherObj[i].enabled = false;
+                }
+            }
             water[index].colliderMask &= ~(1 << 0); //去掉default layer
             
             //碰撞項設定
@@ -64,7 +72,13 @@ public class WaveGameController : MonoBehaviour
             index += input > 0? 1: -1; //更改層
 
             map[index].enabled = true;
-             water[index].colliderMask |= 1 << 0;
+            for(int i = 0; i<otherObj.Length; i++)
+            {
+                if(otherObjIndex[i]==index){
+                    otherObj[i].enabled = true;
+                }
+            }
+            water[index].colliderMask |= 1 << 0;
             waterl = LayerMask.NameToLayer(waterLayer[index]);
             Physics2D.IgnoreLayerCollision(playerLayer, waterl, false);
             SpriteRenderer sr = player.GetComponent<SpriteRenderer>();

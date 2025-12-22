@@ -5,6 +5,7 @@ public class SpawnController : MonoBehaviour
 {
     public GameObject[] gameObjects;
     public float[] spawnTime;
+    public GameObject player;
 
     private float[] objTimer = {0f, 0f, 0f};
 
@@ -15,7 +16,8 @@ public class SpawnController : MonoBehaviour
             objTimer[i]+= Time.deltaTime;
             if (objTimer[i] > spawnTime[i])
             {
-                Instantiate(gameObjects[i]);
+                sinkGround sinkg = Instantiate(gameObjects[i]).transform.GetChild(0).GetComponent<sinkGround>();
+                sinkg.player = this.player;
                 objTimer[i] = 0f;
             }
         }
