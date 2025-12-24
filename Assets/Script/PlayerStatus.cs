@@ -1,5 +1,6 @@
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerStatus : MonoBehaviour
 {
@@ -54,6 +55,8 @@ public class PlayerStatus : MonoBehaviour
 
     void WaveControl()
     {
+        if(Energy>10) Energy = 10;
+
         if (ropeSystem.startShoot == 0 && spiderWebControl.startShoot == 0)
         {
             reWaveTimer += Time.deltaTime;
@@ -91,6 +94,13 @@ public class PlayerStatus : MonoBehaviour
             SpriteRenderer src = EnergyObj.transform.GetChild(1).GetComponent<SpriteRenderer>();
             Color c = src.color;
             c.a = 0.4f;
+            src.color = c;
+        }
+        else if(Energy < 10.0f)
+        {
+            SpriteRenderer src = EnergyObj.transform.GetChild(1).GetComponent<SpriteRenderer>();
+            Color c = src.color;
+            c.a = 0.8f;
             src.color = c;
         }
         else

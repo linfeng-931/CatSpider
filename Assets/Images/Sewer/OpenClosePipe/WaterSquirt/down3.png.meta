@@ -119,12 +119,12 @@ TextureImporter:
       name: down3_0
       rect:
         serializedVersion: 2
-        x: 156
-        y: 73
-        width: 192
-        height: 789
+        x: 0
+        y: 0
+        width: 512
+        height: 910
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -137,33 +137,11 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: down3_1
-      rect:
-        serializedVersion: 2
-        x: 337
-        y: 153
-        width: 15
-        height: 14
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 974ca1711cceff170800000000000000
-      internalID: 8214544559407547513
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 7afa8735bb658441db6bc350009c5a50
     internalID: 0
     vertices: []
     indices: 

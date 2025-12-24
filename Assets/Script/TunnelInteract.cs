@@ -23,6 +23,7 @@ public class TunnelInteract : MonoBehaviour
     private SpriteRenderer sprArrow;
     private UnityEngine.Color c;
     private float changeSceneTimer;
+    private bool canChange;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,7 +35,7 @@ public class TunnelInteract : MonoBehaviour
         spr = transform.GetComponent<SpriteRenderer>();
         sprArrow = arrow.transform.GetComponent<SpriteRenderer>();
         c = spr.color;
-        playerController.isInteract = false;
+        canChange = false;
     }
 
     // Update is called once per frame
@@ -50,6 +51,7 @@ public class TunnelInteract : MonoBehaviour
 
         if(Mathf.Abs(player.position.x - transform.position.x) < 10.0f)
         {
+            canChange = true;
             if(target < 1f){
                 target = target + 2f*Time.deltaTime;
                 c.a = target;
@@ -69,6 +71,7 @@ public class TunnelInteract : MonoBehaviour
         }
         else
         {
+            canChange = false;
             if(target > 0f){
                 target = target - 2f*Time.deltaTime;
                 c.a = target;
@@ -87,7 +90,7 @@ public class TunnelInteract : MonoBehaviour
             }
         }
 
-        if (playerController.isInteract)
+        if (canChange && playerController.isInteract)
         {
             if(changeSceneTimer == 0f)
             {

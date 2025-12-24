@@ -116,12 +116,12 @@ TextureImporter:
       name: down_off1_0
       rect:
         serializedVersion: 2
-        x: 172
-        y: 72
-        width: 156
-        height: 790
+        x: 0
+        y: 0
+        width: 512
+        height: 910
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 606699c5e27b0491b8b9ea68cece806c
     internalID: 0
     vertices: []
     indices: 

@@ -116,12 +116,12 @@ TextureImporter:
       name: down_on3_0
       rect:
         serializedVersion: 2
-        x: 185
-        y: 134
-        width: 138
-        height: 728
+        x: 0
+        y: 0
+        width: 512
+        height: 910
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 0d31d6a2d5e6d4d5baed6db0b5365eb6
     internalID: 0
     vertices: []
     indices: 

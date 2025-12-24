@@ -119,12 +119,12 @@ TextureImporter:
       name: down_off2_0
       rect:
         serializedVersion: 2
-        x: 211
-        y: 71
-        width: 86
-        height: 791
+        x: 0
+        y: 0
+        width: 512
+        height: 910
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -146,7 +146,7 @@ TextureImporter:
         width: 8
         height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -163,7 +163,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 77a9afa3396424220aee0cbe2221ee0b
     internalID: 0
     vertices: []
     indices: 

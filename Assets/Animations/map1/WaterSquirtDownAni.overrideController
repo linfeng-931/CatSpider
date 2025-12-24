@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WaterSquirtDownAni
+  m_Controller: {fileID: 9100000, guid: fc46f3e27073f4cd6bf679e2b59b9104, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 4e22b57352cc14b97a0e6c3e88986ba8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0dd31c09565e044488dc756b813213bf, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: c790a3d7fb3284d8aae4e93742fe1409, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: fd7f9e1168c414339bfe1fb33c28c3cf, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 38a2e6bddb14d4d01a8984ee25e173b0, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 437c091d361c14b2397b29db1a7e8fe7, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 2d0d5447632fd4c28bb20617b638bd82, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 92fc82f4ea19843f4bd8289caf9716c3, type: 2}
