@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Settings/Scenes/Sewer/map4.unity
     guid: 07cc886d7455645a8b2404b4b76c6c0a
+  - enabled: 1
+    path: Assets/Settings/Scenes/startUI.unity
+    guid: 1e83b8ad324aa4c5a963f3ebb88b81d6
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

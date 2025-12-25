@@ -9,18 +9,24 @@ public class Follower : MonoBehaviour
     public int puzzlesIndex;
     public float puzzlesTime;
     public float puzzlesSpeed;
+    public bool isShake;
+
     private float Timer;
+    private float shakeTimer;
+    private bool shakeDir;
 
     void Start()
     {
         transform.position = player.transform.position + offset;
         puzzlesIndex = -1;
+        shakeTimer = 0;
+        shakeDir = false;
     }
 
     void LateUpdate()
     {
-        if(puzzlesIndex == -1) transform.position = player.transform.position + offset;
-        else
+        if(puzzlesIndex == -1 && !isShake) transform.position = player.transform.position + offset;
+        else if(puzzlesIndex != -1)
         {
             Timer+=Time.deltaTime;
             if(Timer<puzzlesTime) transform.position = Vector3.MoveTowards(transform.position, new Vector3(puzzles[puzzlesIndex].position.x, puzzles[puzzlesIndex].position.y,transform.position.z), Time.deltaTime*puzzlesSpeed);
@@ -31,10 +37,22 @@ public class Follower : MonoBehaviour
                 {
                     transform.position = player.transform.position + offset;
                     puzzlesIndex = -1;
-                    print(puzzlesIndex);
                     Timer = 0;
                 }
             }
+        }
+
+        if (isShake)
+        {
+            shakeTimer += Time.deltaTime;
+            if (shakeTimer > 0.15f)
+            {
+                shakeDir = !shakeDir;
+                shakeTimer = 0;
+            }
+
+            if(shakeDir) transform.Translate(Vector3.up * Time.deltaTime);
+            else transform.Translate(Vector3.down * Time.deltaTime);
         }
     }
 }
