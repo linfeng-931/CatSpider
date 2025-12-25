@@ -116,12 +116,12 @@ TextureImporter:
       name: bottle_cap_spill4_0
       rect:
         serializedVersion: 2
-        x: 142
-        y: 29
-        width: 183
-        height: 165
+        x: 0
+        y: 0
+        width: 384
+        height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8a69b303cd64c47508412d3e3a47896b
     internalID: 0
     vertices: []
     indices: 

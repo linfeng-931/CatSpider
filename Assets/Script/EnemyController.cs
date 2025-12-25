@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -90,6 +91,11 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
             case 3:
+                if (!Array.Exists(animator.parameters, p => p.name == "isLookAround"))
+                {
+                    action = 1;
+                    return;
+                }
                 animator.SetBool("isLookAround", true);
                 feetAni.SetBool("isLookAround", true);
                 lookAroundTimer += Time.deltaTime;

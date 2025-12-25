@@ -9,6 +9,7 @@ public class PipeSwitch : MonoBehaviour
     public Follower camera;
     public bool type_b, type_y, type_g;
     public bool active_b, active_y, active_g;
+    public int puzzlesIndex;
 
     private WaterSquirtController[] waterBController, waterYController, waterGController;
     private bool canAct;
@@ -151,7 +152,7 @@ public class PipeSwitch : MonoBehaviour
             }
             else
             {
-                if(camera.puzzlesIndex == -1) camera.puzzlesIndex = 0;
+                if(camera.puzzlesIndex == -1) camera.puzzlesIndex = puzzlesIndex;
                 rdir*=-1;
                 isRotate = false;
                 changeWater = true;
@@ -173,7 +174,7 @@ public class PipeSwitch : MonoBehaviour
             }
             else
             {
-                if(camera.puzzlesIndex == -1) camera.puzzlesIndex = 0;
+                if(camera.puzzlesIndex == -1) camera.puzzlesIndex = puzzlesIndex;
                 rdir*=-1;
                 isRotate = false;
                 changeWater = true;
