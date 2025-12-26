@@ -12,7 +12,7 @@ public class GameStartBtn : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("map1");  
+            SceneManager.LoadScene(6);  
         }
     }
     public void LoadGameBtn()
@@ -30,6 +30,14 @@ public class GameStartBtn : MonoBehaviour
     public void ContinueWarning()
     {
         PlayerPrefs.DeleteAll();
-        SceneManager.LoadScene("map1");  
+        SceneManager.LoadScene(6);  
+    }
+    public void Exit()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
     }
 }

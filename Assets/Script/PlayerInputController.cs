@@ -67,4 +67,10 @@ public class PlayerInputController : MonoBehaviour
             playerInput.SwitchCurrentActionMap(rePlayerInput);
         }
     }
+    public void CloseMenu()
+    {
+        Menu.SetActive(false);
+        Time.timeScale = 1;
+        playerInput.SwitchCurrentActionMap(rePlayerInput);
+    }
 }

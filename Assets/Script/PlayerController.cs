@@ -41,6 +41,9 @@ public class PlayerController : MonoBehaviour
     public float hurtMoveDistance = 5.0f;
     public bool isShoot = false;
     public bool twiceColGround = false;
+    public AudioClip walkSound;
+    public AudioClip dashSound;
+    public AudioClip jumpSound;
 
     private Rigidbody2D rig;
     private Animator ani;
@@ -73,6 +76,9 @@ public class PlayerController : MonoBehaviour
     float jumpDelayTime = 0f;
     float dashDistance = 0f;
     Vector2 dashOriginalPoint;
+    private AudioSource audioSource;
+    private bool hasAct;
+    private bool isJumpAudio;
 
 
     void Start()
@@ -101,6 +107,9 @@ public class PlayerController : MonoBehaviour
             transform.position = new Vector2(x, y);
             playerStatus.Blood = PlayerPrefs.GetInt("Blood");
         }
+        audioSource = GetComponent<AudioSource>();
+        hasAct = false;
+        isJumpAudio = false;
     }
 
     void FixedUpdate()
@@ -389,6 +398,7 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         InputX = context.ReadValue<Vector2>().x;
+        
         if (InputX > 0)
         {
             if (!directionFlag)
@@ -423,6 +433,7 @@ public class PlayerController : MonoBehaviour
             rig.linearVelocity = new Vector2(rig.linearVelocity.x, jumpForce);
             canJump = false;
             feetAni.SetBool("isJump", true);
+            isJumpAudio = false;
         }
         if (context.canceled)
         {
@@ -485,6 +496,7 @@ public class PlayerController : MonoBehaviour
     //動作函式
     private void Action()
     {
+        hasAct = false;
         ani.SetBool("isSwing", false);
         hatAni.SetBool("isSwing", false);
         feet.SetActive(true);
@@ -502,7 +514,15 @@ public class PlayerController : MonoBehaviour
         {
             ani.SetBool("isShoot", false);
             hatAni.SetBool("isShoot", false);
+        }
 
+        if(!hasAct){
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+
+            audioSource.clip = null;
         }
     }
     private void MoveAction()
@@ -535,6 +555,12 @@ public class PlayerController : MonoBehaviour
                 BodyAniActive("isWalk");
                 feetAni.SetBool("isWalk", true);
                 feet.SetActive(true);
+                audioSource.clip = walkSound;
+                if(!audioSource.isPlaying) audioSource.Play();
+                audioSource.volume = 0.5f;
+                audioSource.pitch = 1.5f;
+                audioSource.loop = true;
+                hasAct = true;
             }
         }
         else if (InputX < 0)
@@ -552,6 +578,12 @@ public class PlayerController : MonoBehaviour
                 BodyAniActive("isWalk");
                 feetAni.SetBool("isWalk", true);
                 feet.SetActive(true);
+                audioSource.clip = walkSound;
+                if(!audioSource.isPlaying) audioSource.Play();
+                audioSource.volume = 0.5f;
+                audioSource.pitch = 1.5f;
+                audioSource.loop = true;
+                hasAct = true;
             }
         }
         else if (standGround)
@@ -575,6 +607,16 @@ public class PlayerController : MonoBehaviour
             feet.SetActive(true);
             feetAni.SetBool("isJump", true);
             feetAni.SetBool("isWalk", false);
+            hasAct = true;
+            
+            if(!audioSource.isPlaying && !isJumpAudio){
+                audioSource.clip = jumpSound;
+                isJumpAudio = true;    
+                audioSource.volume = 0.2f;
+                audioSource.pitch = 1;
+                audioSource.Play();
+            }
+            audioSource.loop = false;
         }
         else
         {
@@ -610,6 +652,13 @@ public class PlayerController : MonoBehaviour
     private void DashAction()
     {
         if (!isDash) return;
+        
+        hasAct = true;
+        audioSource.clip = dashSound;
+        if(!audioSource.isPlaying) audioSource.Play();
+        audioSource.volume = 0.5f;
+        audioSource.loop = false;
+        audioSource.pitch = 1;
 
         dashDistance = Vector2.Distance(transform.position, dashOriginalPoint);
         if (IsTouchingWallLeft())

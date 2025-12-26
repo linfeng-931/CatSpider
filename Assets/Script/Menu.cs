@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
@@ -19,5 +20,14 @@ public class Menu : MonoBehaviour
         string sSec = $"{sec:00}";
 
         Time.SetText(sHour + " : " + sMin + " : " + sSec);
+    }
+
+    public void ToStartUI()
+    {
+        SceneManager.LoadScene(5);
+    }
+    public void CloseMenu()
+    {
+        gameObject.SetActive(false);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class bossControlDemo : MonoBehaviour
@@ -9,8 +10,10 @@ public class bossControlDemo : MonoBehaviour
     public int type; // 0normal, 1boss
 
     private bool isAct;
+    private Vector3 startPoint;
     private float Timer;
     private bool type2StartRun;
+    private float rePoint = 94.7f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,6 +21,7 @@ public class bossControlDemo : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = false;
         Timer = 0;
         type2StartRun = false;
+        startPoint = transform.position;
     }
 
     // Update is called once per frame
@@ -30,6 +34,17 @@ public class bossControlDemo : MonoBehaviour
             if(type == 1) camera.GetComponent<Follower>().isShake = true;
         }
         Action();
+
+        if(Math.Abs(transform.position.x - rePoint) < 0.5f)
+        {
+            Timer = 0;
+            type2StartRun = false;
+            GetComponent<SpriteRenderer>().enabled = false;
+            transform.position = startPoint;
+            camera.GetComponent<Follower>().isShake = false;
+            camera.GetComponent<Follower>().puzzlesIndex = -1;
+            isAct = false;
+        }
     }
     void Action()
     {
