@@ -1,8 +1,5 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class EnemyController : MonoBehaviour
 {
@@ -62,7 +59,6 @@ public class EnemyController : MonoBehaviour
         if(standGround && !colWall) Trace();
         else isTrace = false;
 
-        print(isTrace);
         if(!isTrace)
         {
             if (!flip)
@@ -161,6 +157,8 @@ public class EnemyController : MonoBehaviour
         if(Vector3.Distance(player.transform.position, transform.position) < 15f && Math.Abs(player.transform.position.y-transform.position.y)<5f)
         {
             isTrace = true;
+            animator.SetBool("isLookAround", false);
+            feetAni.SetBool("isLookAround", false);
             action = 2;
             if(player.position.x-transform.position.x <= 0) flip = false;
             else flip = true;

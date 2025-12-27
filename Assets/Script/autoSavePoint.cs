@@ -18,7 +18,6 @@ public class autoSavePoint : MonoBehaviour
         {
             save.Save();
             isSave = true;
-            print("save");
         }
     }
 }

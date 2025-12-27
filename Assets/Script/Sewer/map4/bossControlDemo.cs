@@ -15,6 +15,7 @@ public class bossControlDemo : MonoBehaviour
     private float Timer;
     private bool type2StartRun;
     private float rePoint = 94.7f;
+    private CapsuleCollider2D capsuleCollider2D;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,6 +24,7 @@ public class bossControlDemo : MonoBehaviour
         Timer = 0;
         type2StartRun = false;
         startPoint = transform.position;
+        capsuleCollider2D = GetComponent<CapsuleCollider2D>();
     }
 
     // Update is called once per frame
@@ -62,7 +64,6 @@ public class bossControlDemo : MonoBehaviour
                 isAct = false;
                 GetComponent<AudioSource>().enabled = false;
                 isFinal = true;
-                print(true);
                 return;
             }
         }
@@ -70,6 +71,7 @@ public class bossControlDemo : MonoBehaviour
         {
             if (!type2StartRun)
             {
+                capsuleCollider2D.enabled = true;
                 Timer+= Time.deltaTime;
                 if (Timer > 2.0f)
                 {

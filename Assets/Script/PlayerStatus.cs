@@ -1,6 +1,4 @@
-using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class PlayerStatus : MonoBehaviour
 {

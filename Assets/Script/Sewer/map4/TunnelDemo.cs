@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 public class TunnelDemo : MonoBehaviour

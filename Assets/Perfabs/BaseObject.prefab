@@ -443,6 +443,8 @@ MonoBehaviour:
   InputX: 0
   InputY: 0
   moveDistance: 100
+  rotateObj: {fileID: 0}
+  rotateSpeed: 0
 --- !u!1 &540200114422342295
 GameObject:
   m_ObjectHideFlags: 0
@@ -851,6 +853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SaveLoad
   player: {fileID: 5772248655531085079}
   playerStatus: {fileID: 6664382431386633124}
+  achivementControl: {fileID: 0}
 --- !u!114 &3330167865886071141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3381,6 +3384,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Menu
   playerStatus: {fileID: 6664382431386633124}
   Time: {fileID: 3047083219055748113}
+  DeadCount: {fileID: 0}
 --- !u!1 &5294004340624977954
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
-using Mono.Cecil.Cil;
-using Unity.VisualScripting;
 
 public class RopeSystem : MonoBehaviour
 {

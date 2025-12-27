@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -49,7 +48,6 @@ public class ScannerController : MonoBehaviour
     {
         InputX = context.ReadValue<Vector2>().x;
         InputY = context.ReadValue<Vector2>().y;
-        print(true);
     }
 
     private void DrawPoint()
