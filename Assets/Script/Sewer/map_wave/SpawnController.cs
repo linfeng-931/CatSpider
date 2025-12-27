@@ -7,8 +7,16 @@ public class SpawnController : MonoBehaviour
     public float[] spawnTime;
     public GameObject player;
 
-    private float[] objTimer = {0f, 0f, 0f};
+    private float[] objTimer;
 
+    void Start()
+    {
+        objTimer = new float[spawnTime.Length];
+        for(int i = 0; i<objTimer.Length; i++)
+        {
+            objTimer[i] = 0f;
+        }
+    }
     void Update()
     {
         for(int i = 0; i<spawnTime.Length; i++)

@@ -15,6 +15,7 @@ public class PlayerStatus : MonoBehaviour
     public int Blood = 5;
     public UnityEngine.Color[] blood_color;
     public float gameTimer = 0.0f;
+    public int deadCount = 0;
 
     private Transform wave;
     private bool changeWave = false;
@@ -30,6 +31,14 @@ public class PlayerStatus : MonoBehaviour
     {
         wave = EnergyObj.transform.GetChild(1);
         waveTargetPos = wave.position;
+        if (PlayerPrefs.HasKey("GameTime"))
+        {
+            gameTimer = PlayerPrefs.GetFloat("GameTime");
+        }
+        if (PlayerPrefs.HasKey("DeadCount"))
+        {
+            deadCount = PlayerPrefs.GetInt("DeadCount");
+        }
     }
 
     void Update()
@@ -38,6 +47,7 @@ public class PlayerStatus : MonoBehaviour
         
         if (Blood == 0)
         {
+            if(deadTimer == 0) deadCount++;
             deadTimer += Time.deltaTime;
         }
         if(deadTimer > 1.0f)

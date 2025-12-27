@@ -14,6 +14,7 @@ public class TunnelInteract : MonoBehaviour
     public PlayerController playerController;
     public string TargetScene;
     public Animator fade;
+    public SaveLoad saveLoad;
 
     private float upDownMoveTimer;
     private int upDownMoveFlag;
@@ -100,6 +101,7 @@ public class TunnelInteract : MonoBehaviour
 
             if(changeSceneTimer >= 1.5f)
             {
+                saveLoad.Save();
                 SceneManager.LoadScene(TargetScene, LoadSceneMode.Single);
                 playerController.isInteract = false;
             }

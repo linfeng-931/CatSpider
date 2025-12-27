@@ -7,6 +7,7 @@ public class Menu : MonoBehaviour
 {
     public PlayerStatus playerStatus;
     public TextMeshProUGUI Time;
+    public TextMeshProUGUI DeadCount;
 
     public void ShowDetail()
     {
@@ -20,11 +21,12 @@ public class Menu : MonoBehaviour
         string sSec = $"{sec:00}";
 
         Time.SetText(sHour + " : " + sMin + " : " + sSec);
+        DeadCount.SetText(playerStatus.deadCount+"");
     }
 
     public void ToStartUI()
     {
-        SceneManager.LoadScene(5);
+        SceneManager.LoadScene(0);
     }
     public void CloseMenu()
     {

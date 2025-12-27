@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3785812095176314157}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 142.99043, y: -19.263245, z: 0}
+  m_LocalPosition: {x: 161.8, y: -19.263245, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -54,6 +54,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 745428505516372291}
     m_Modifications:
+    - target: {fileID: 1537486104948361669, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
+      propertyPath: m_Size.x
+      value: 7.613205
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537486104948361669, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
+      propertyPath: m_Size.y
+      value: 2.8808708
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537486104948361669, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.024711609
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537486104948361669, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.25069618
+      objectReference: {fileID: 0}
+    - target: {fileID: 1537486104948361669, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 7.67
+      objectReference: {fileID: 0}
     - target: {fileID: 5878427301949430655, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -107,6 +127,10 @@ PrefabInstance:
       value: MovingObj
       objectReference: {fileID: 0}
     - target: {fileID: 7329138549509456088, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3104776513761251670, guid: c12a880ce248e49ccac1d2a9606ee13b, type: 3}
+    - target: {fileID: 7329138549509456088, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}
       propertyPath: m_SortingOrder
       value: 4
       objectReference: {fileID: 0}
@@ -135,6 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6dbedf2a0fd74597a249e82f7ea3986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::sinkGround
+  player: {fileID: 0}
+  downSpeed: 0.2
 --- !u!4 &5654426966793532018 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5878427301949430655, guid: 7761cc67ce3b044ca82910a825cb33a7, type: 3}

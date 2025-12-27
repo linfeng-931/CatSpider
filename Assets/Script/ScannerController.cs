@@ -10,6 +10,8 @@ public class ScannerController : MonoBehaviour
     public float InputX;
     public float InputY;
     public float moveDistance;
+    public RectTransform rotateObj;
+    public float rotateSpeed;
 
     private float range;
     private GameObject collection;
@@ -19,7 +21,7 @@ public class ScannerController : MonoBehaviour
 
     void Start()
     {
-        range = 45f;
+        range = 35f;
         collection = transform.GetChild(2).gameObject;
         npc = transform.GetChild(1).gameObject;
         player = transform.GetChild(0).gameObject;
@@ -40,12 +42,14 @@ public class ScannerController : MonoBehaviour
 
             GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x+InputX, pos.y+InputY);
         }
+        RotateObj();
     }
 
     public void Move(InputAction.CallbackContext context)
     {
         InputX = context.ReadValue<Vector2>().x;
         InputY = context.ReadValue<Vector2>().y;
+        print(true);
     }
 
     private void DrawPoint()
@@ -85,5 +89,10 @@ public class ScannerController : MonoBehaviour
                 npcTransform.localScale = new Vector3(pointScale.x * scale, pointScale.y * scale, pointScale.z);
             }
         }
+    }
+
+    void RotateObj()
+    {
+        rotateObj.Rotate(0, 0, rotateSpeed);
     }
 }

@@ -9,6 +9,8 @@ public class achivementControl : MonoBehaviour
     public Vector3 targetRect;
     public Vector3 originRect;
     public float moveSpeed;
+    public int[] actAchivement;
+    public SaveLoad saveLoad;
 
     private float Timer;
     private RectTransform point;
@@ -18,6 +20,29 @@ public class achivementControl : MonoBehaviour
     {
         ActIndex = -1;
         Timer = 0;
+        actAchivement = new int[menuList.Length];
+        
+        
+
+        if (PlayerPrefs.HasKey("PlayerPosX"))
+        {
+            for(int i = 0; i<actAchivement.Length; i++)
+            {
+                actAchivement[i] = PlayerPrefs.GetInt("Achivement"+(i+'0'));
+                if (actAchivement[i] == 1)
+                {
+                    disActMenuList[i].SetActive(false);
+                    menuList[i].SetActive(true);
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i<actAchivement.Length; i++)
+            {
+                actAchivement[i] = 0;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -42,6 +67,7 @@ public class achivementControl : MonoBehaviour
             hint[ActIndex].SetActive(false);
             menuList[ActIndex].SetActive(true);
             disActMenuList[ActIndex].SetActive(false);
+            saveLoad.Save();
             ActIndex = -1;
         }
         if(Timer > 5.0f)

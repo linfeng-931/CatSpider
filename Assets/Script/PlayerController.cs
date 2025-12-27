@@ -114,6 +114,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        hasAct = false;
         if(Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, groundMask) || Physics2D.OverlapBox(groundpoint.position, groundBoxSize, .2f, canMove))
         {
             standGround = true;
@@ -130,6 +131,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!readyHurt)
             {
+                audioSource.Stop();
                 Head.SetActive(false);
                 hat.SetActive(true);
                 DisAni();
@@ -147,8 +149,16 @@ public class PlayerController : MonoBehaviour
                 float front = directionFlag ? 1 : -1;
                 transform.rotation = Quaternion.Euler(front, 0, 0);
             
-                BodyAniActive("isHurt");
-                feetAni.SetBool("isHurt", true);
+                if(playerStatus.Blood == 0)
+                {
+                    BodyAniActive("isDead");
+                    feet.SetActive(false);
+                }
+                else
+                {
+                    BodyAniActive("isHurt");
+                    feetAni.SetBool("isHurt", true);
+                }
             }
             hurtTimer += Time.deltaTime;
 
@@ -157,6 +167,7 @@ public class PlayerController : MonoBehaviour
                 isHurt = false;
                 readyHurt = false;
                 ani.SetBool("isHurt", false);
+                ani.SetBool("isDead", false);
                 hatAni.SetBool("isHurt", false);
                 feetAni.SetBool("isHurt", false);
                 feet.SetActive(false);
@@ -165,7 +176,7 @@ public class PlayerController : MonoBehaviour
             }
             if (!hurtMove)
             {
-                if (Vector2.Distance(hurtStartPos, transform.position) < hurtMoveDistance && playerStatus.Blood>1)
+                if (Vector2.Distance(hurtStartPos, transform.position) < hurtMoveDistance && playerStatus.Blood>=1)
                 {
                     rig.linearVelocity = new Vector2(20f * enemyPos, 0f);
                 }
@@ -496,7 +507,6 @@ public class PlayerController : MonoBehaviour
     //動作函式
     private void Action()
     {
-        hasAct = false;
         ani.SetBool("isSwing", false);
         hatAni.SetBool("isSwing", false);
         feet.SetActive(true);
@@ -555,11 +565,14 @@ public class PlayerController : MonoBehaviour
                 BodyAniActive("isWalk");
                 feetAni.SetBool("isWalk", true);
                 feet.SetActive(true);
-                audioSource.clip = walkSound;
-                if(!audioSource.isPlaying) audioSource.Play();
-                audioSource.volume = 0.5f;
-                audioSource.pitch = 1.5f;
-                audioSource.loop = true;
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.clip = walkSound;
+                    audioSource.volume = 0.5f;
+                    audioSource.pitch = 1.5f;
+                    audioSource.loop = true;
+                    audioSource.Play();
+                } 
                 hasAct = true;
             }
         }
@@ -578,11 +591,14 @@ public class PlayerController : MonoBehaviour
                 BodyAniActive("isWalk");
                 feetAni.SetBool("isWalk", true);
                 feet.SetActive(true);
-                audioSource.clip = walkSound;
-                if(!audioSource.isPlaying) audioSource.Play();
-                audioSource.volume = 0.5f;
-                audioSource.pitch = 1.5f;
-                audioSource.loop = true;
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.clip = walkSound;
+                    audioSource.volume = 0.5f;
+                    audioSource.pitch = 1.5f;
+                    audioSource.loop = true;   
+                    audioSource.Play();
+                }  
                 hasAct = true;
             }
         }
@@ -608,7 +624,12 @@ public class PlayerController : MonoBehaviour
             feetAni.SetBool("isJump", true);
             feetAni.SetBool("isWalk", false);
             hasAct = true;
-            
+
+            if (audioSource.isPlaying && audioSource.clip != jumpSound && audioSource.clip != dashSound)
+            {
+                audioSource.clip = null;
+                audioSource.Stop();
+            }
             if(!audioSource.isPlaying && !isJumpAudio){
                 audioSource.clip = jumpSound;
                 isJumpAudio = true;    
@@ -773,6 +794,7 @@ public class PlayerController : MonoBehaviour
         ani.SetBool("isShoot", false);
         ani.SetBool("isDash", false);
         ani.SetBool("isHurt", false);
+        ani.SetBool("isDead", false);
 
         hatAni.SetBool("isWalk", false);
         hatAni.SetBool("isSquat", false);
@@ -820,6 +842,10 @@ public class PlayerController : MonoBehaviour
             case "isHurt":
                 ani.SetBool("isHurt", true);
                 hatAni.SetBool("isHurt", true);
+                break;
+            case "isDead":
+                ani.SetBool("isDead", true);
+                hatAni.SetBool("isSquat", true);
                 break;
             default:
                 break;

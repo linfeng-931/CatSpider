@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -19,6 +20,7 @@ public class EnemyController : MonoBehaviour
     public LayerMask spiderWebMask;
     public Vector3 frontPointOffset;
     public Vector3 frontGroundPointOffset;
+    public Transform player;
 
     private float idleTimer;
     private float walkTimer;
@@ -27,6 +29,7 @@ public class EnemyController : MonoBehaviour
     private bool flip;
     private float reMoveSpeed;
     private bool webDebuff;
+    private bool isTrace;
 
     void Start()
     {
@@ -55,18 +58,27 @@ public class EnemyController : MonoBehaviour
 
         transform.GetComponent<SpriteRenderer>().flipX = flip;
         int dir = flip ? 1 : -1;
-        if (!flip)
+
+        if(standGround && !colWall) Trace();
+        else isTrace = false;
+
+        print(isTrace);
+        if(!isTrace)
         {
-            frontPoint.position = transform.position + frontPointOffset;
-            frontGroundPoint.position = transform.position + frontGroundPointOffset;
+            if (!flip)
+            {
+                frontPoint.position = transform.position + frontPointOffset;
+                frontGroundPoint.position = transform.position + frontGroundPointOffset;
+            }
+            else
+            {
+                Vector3 fOffset = new Vector3(frontPointOffset.x * -1, frontPointOffset.y, 0);
+                Vector3 fgOffset = new Vector3(frontGroundPointOffset.x * -1, frontGroundPointOffset.y, 0);
+                frontPoint.position = transform.position + fOffset;
+                frontGroundPoint.position = transform.position + fgOffset;
+            }
         }
-        else
-        {
-            Vector3 fOffset = new Vector3(frontPointOffset.x * -1, frontPointOffset.y, 0);
-            Vector3 fgOffset = new Vector3(frontGroundPointOffset.x * -1, frontGroundPointOffset.y, 0);
-            frontPoint.position = transform.position + fOffset;
-            frontGroundPoint.position = transform.position + fgOffset;
-        }
+        
         switch (action)
         {
             case 1:
@@ -80,14 +92,18 @@ public class EnemyController : MonoBehaviour
             case 2:
                 animator.SetBool("isWalk", true);
                 feetAni.SetBool("isWalk", true);
-                walkTimer += Time.deltaTime;
-                transform.position = transform.position + new Vector3(MoveSpeed * Time.deltaTime * dir, 0f, 0f);
-                if (walkTimer > WalkTime || colWall || !standGround)
+
+                if (!isTrace)
                 {
-                    walkTimer = 0f;
-                    action = 3;
-                    animator.SetBool("isWalk", false);
-                    feetAni.SetBool("isWalk", false);
+                    walkTimer += Time.deltaTime;
+                    transform.position = transform.position + new Vector3(MoveSpeed * Time.deltaTime * dir, 0f, 0f);
+                    if (walkTimer > WalkTime || colWall || !standGround)
+                    {
+                        walkTimer = 0f;
+                        action = 3;
+                        animator.SetBool("isWalk", false);
+                        feetAni.SetBool("isWalk", false);
+                    }
                 }
                 break;
             case 3:
@@ -124,7 +140,7 @@ public class EnemyController : MonoBehaviour
     {
         if (other.CompareTag("SpiderWeb"))
         {
-            
+            webDebuff = true;
         }
     }
 
@@ -137,6 +153,24 @@ public class EnemyController : MonoBehaviour
                 MoveSpeed = reMoveSpeed;
                 webDebuff = false;
             }
+        }
+    }
+
+    private void Trace()
+    {
+        if(Vector3.Distance(player.transform.position, transform.position) < 15f && Math.Abs(player.transform.position.y-transform.position.y)<5f)
+        {
+            isTrace = true;
+            action = 2;
+            if(player.position.x-transform.position.x <= 0) flip = false;
+            else flip = true;
+
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(player.position.x, transform.position.y, transform.position.z), Time.deltaTime*MoveSpeed);
+        }
+        else
+        {
+            isTrace = false;
+            return;
         }
     }
 }

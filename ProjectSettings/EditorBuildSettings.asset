@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Settings/Scenes/startUI.unity
+    guid: 1e83b8ad324aa4c5a963f3ebb88b81d6
+  - enabled: 1
+    path: Assets/Settings/Scenes/StartVedio.unity
+    guid: fd1609f70b9694c869256d8a4149fd44
+  - enabled: 1
     path: Assets/Settings/Scenes/Sewer/map1.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
@@ -20,12 +26,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Settings/Scenes/Sewer/map4.unity
     guid: 07cc886d7455645a8b2404b4b76c6c0a
-  - enabled: 1
-    path: Assets/Settings/Scenes/startUI.unity
-    guid: 1e83b8ad324aa4c5a963f3ebb88b81d6
-  - enabled: 1
-    path: Assets/Settings/Scenes/StartVedio.unity
-    guid: fd1609f70b9694c869256d8a4149fd44
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

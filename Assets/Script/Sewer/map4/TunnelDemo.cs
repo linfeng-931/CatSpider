@@ -23,18 +23,18 @@ public class TunnelDemo : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Mathf.Abs(player.position.x - transform.position.x) < 5.0f)
+        if(Mathf.Abs(player.position.x - transform.position.x) < 10.0f || canChange)
         {
             if(changeSceneTimer == 0f)
             {
+                canChange = true;
                 fade.SetTrigger("changeScene");
             }
             changeSceneTimer += Time.deltaTime;
 
-            if(changeSceneTimer >= 1.5f)
+            if(changeSceneTimer >= 1f)
             {
-                SceneManager.LoadScene(5, LoadSceneMode.Single);
-                //目前無法切換！！！！！！！！！！！！！！！！！
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
             }
         }
 

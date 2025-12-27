@@ -57,7 +57,7 @@ PrefabInstance:
     - target: {fileID: 378150416129670484, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 6879785910209034016, guid: ca2d7b6d8897646a0b25c9e30319cfa3, type: 3}
+      objectReference: {fileID: 8946709156612456009, guid: f6b92e85476e64597b6ae159b52e204d, type: 3}
     - target: {fileID: 378150416129670484, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
       propertyPath: m_SortingOrder
       value: 7
@@ -123,8 +123,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9158031491148457525, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
+      propertyPath: m_Size.y
+      value: 2.3663697
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158031491148457525, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158031491148457525, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.85946655
       objectReference: {fileID: 0}
     - target: {fileID: 9158031491148457525, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
       propertyPath: m_IsTrigger
@@ -132,11 +140,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9158031491148457525, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 4.5
+      value: 5.06
       objectReference: {fileID: 0}
     - target: {fileID: 9158031491148457525, guid: 5ce340c4e34a7490f8c5e8cd3885c4d4, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 3.26
+      value: 1.19
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -168,3 +176,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6dbedf2a0fd74597a249e82f7ea3986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::sinkGround
+  player: {fileID: 0}
+  downSpeed: 0.2

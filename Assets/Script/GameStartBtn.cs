@@ -12,7 +12,7 @@ public class GameStartBtn : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(6);  
+            SceneManager.LoadScene(1);  
         }
     }
     public void LoadGameBtn()
@@ -30,7 +30,7 @@ public class GameStartBtn : MonoBehaviour
     public void ContinueWarning()
     {
         PlayerPrefs.DeleteAll();
-        SceneManager.LoadScene(6);  
+        SceneManager.LoadScene(1);  
     }
     public void Exit()
     {

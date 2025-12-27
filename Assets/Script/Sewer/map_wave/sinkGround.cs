@@ -3,6 +3,7 @@ using UnityEngine;
 public class sinkGround : MonoBehaviour
 {
     public GameObject player;
+    public float downSpeed = 0.2f;
     private bool isSink;
     private float speed;
 
@@ -16,8 +17,8 @@ public class sinkGround : MonoBehaviour
     void FixedUpdate()
     {
         if(isSink){
-            transform.Translate(Vector3.down*0.2f*Time.deltaTime);
-            player.transform.Translate(Vector3.down*0.2f*Time.deltaTime);
+            transform.Translate(Vector3.down*downSpeed*Time.deltaTime);
+            player.transform.Translate(Vector3.down*downSpeed*Time.deltaTime);
         }
     }
 
